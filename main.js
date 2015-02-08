@@ -1,8 +1,46 @@
 // main.js
 
-var canvasH = 350,
-    canvasW = 600;
-var game = new Phaser.Game(canvasW, canvasH, Phaser.AUTO, 'gameDiv');
+var firstheight = window.innerHeight;
+var firstwidth = window.innerWidth;
+var game = new Phaser.Game(firstwidth, firstheight, Phaser.AUTO, 'gameDiv');
+
+$(window).resize(function () {
+    display.resizer();
+});
+
+var display = {
+
+    resizer: function () {
+
+        var myheight = $(window).innerHeight();
+        var mywidth = $(window).innerWidth();
+
+        try {
+
+            game.width = Number(mywidth);
+            game.height = Number(myheight);
+            game.stage.bounds.width = Number(mywidth);
+            game.stage.bounds.height = Number(myheight);
+
+            game.renderer.resize(Number(mywidth), Number(myheight));
+
+            firstwidth = Number(mywidth);
+            firstheight = Number(myheight);
+
+            Phaser.Canvas.setSmoothingEnabled(game.context, false);
+
+        } catch (e) {
+
+            console.log("Error description: " + e.message + "");
+
+        }
+
+    }
+};
+
+//var canvasH = 350,
+//    canvasW = 600;
+//var game = new Phaser.Game(canvasW, canvasH, Phaser.AUTO, 'gameDiv');
 
 var platforms;
 
@@ -15,9 +53,10 @@ var mainState = {
     ///////////////////////////////////////////////
 
     preload: function () {
+
         // PLAYER
         this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-        
+
         // SOL
         this.game.load.image('ground', 'assets/ground.png');
 
@@ -31,9 +70,12 @@ var mainState = {
         this.game.load.image('back_02', 'assets/bg_02.png');
         this.game.load.image('back_03', 'assets/bg_03.png');
         this.game.load.image('back_04', 'assets/bg_04.png');
-        
+
         //SOUND
         this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
+
+        console.log(firstwidth);
+        console.log(firstheight);
 
     },
 
@@ -47,13 +89,13 @@ var mainState = {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.back = this.game.add.tileSprite(0, 0, canvasW, 600, 'back');
-        this.back_04 = this.game.add.tileSprite(0, game.world.height - 318, canvasW, 318, 'back_04');
-        this.back_03 = this.game.add.tileSprite(0, game.world.height - 254, canvasW, 254, 'back_03');
-        this.back_02 = this.game.add.tileSprite(0, game.world.height - 172, canvasW, 172, 'back_02');
-        this.vide = game.add.tileSprite(50, canvasH - 139, 'vide');
-        this.ground = game.add.tileSprite(0, game.world.height - 50, canvasW, 91, 'ground');
-        
+        this.back = this.game.add.tileSprite(0, 0, firstwidth, 600, 'back');
+        this.back_04 = this.game.add.tileSprite(0, game.world.height - 318, firstwidth, 318, 'back_04');
+        this.back_03 = this.game.add.tileSprite(0, game.world.height - 254, firstwidth, 254, 'back_03');
+        this.back_02 = this.game.add.tileSprite(0, game.world.height - 172, firstwidth, 172, 'back_02');
+        this.vide = game.add.tileSprite(50, firstheight - 139, 'vide');
+        this.ground = game.add.tileSprite(0, game.world.height - 50, firstwidth, 91, 'ground');
+
         this.die = game.add.audio('die');
 
         //PLATEFORMS
@@ -72,7 +114,7 @@ var mainState = {
 
 
         //PLAYER
-        this.dude = this.game.add.sprite(canvasW / 6, canvasH - 98, 'dude');
+        this.dude = this.game.add.sprite(firstwidth / 6, firstheight - 98, 'dude');
 
         game.physics.enable(this.dude, Phaser.Physics.ARCADE);
         this.dude.enableBody = true;
@@ -88,7 +130,6 @@ var mainState = {
 
         //DOUBLE SAUT
         this.compte = 0;
-
 
         //SCORE
 
@@ -134,7 +175,7 @@ var mainState = {
 
 
         this.collides(this.rocks, this.dude)
-        //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
+            //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
 
 
     },
@@ -167,11 +208,19 @@ var mainState = {
     addRowOfrocks: function () {
         var obstacleNumber = Math.floor((Math.random() * 6) + 1);
         for (var i = 0; i < obstacleNumber; i++)
-            this.addOnerock(i*150 + canvasW, canvasH - 72);
+            this.addOnerock(i * 150 + firstwidth, firstheight - 72);
 
-        //this.addOnerock(0 + canvasW, canvasH - 272);
+        //this.addOnerock(0 + firstwidth, firstheight - 272);
 
+        // Updated upstream
+        //
+        //                        for (var i = 0; i < 3; i++)
+        //                            if (i != hole && i != hole + 1)
+        //                                this.addOnerock(800 * i + firstwidth, firstheight - 72);
+        // Stashed changes
     },
+
+
 
     ///////////////////////////////////////////////
     //            
@@ -191,6 +240,9 @@ var mainState = {
         }
 
     },
+
+
+
 
 
 };
