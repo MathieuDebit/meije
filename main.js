@@ -43,6 +43,7 @@ var display = {
 //var game = new Phaser.Game(canvasW, canvasH, Phaser.AUTO, 'gameDiv');
 
 var platforms;
+var speed = 1;
 
 var mainState = {
 
@@ -62,6 +63,7 @@ var mainState = {
 
         // OBSTACLES
         this.game.load.image('rock', 'assets/rocks.png');
+        this.game.load.image('tronc', 'assets/tronc.png');
 
 
         // BACKGROUND
@@ -74,8 +76,8 @@ var mainState = {
         //SOUND
         this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
 
-        console.log(firstwidth);
-        console.log(firstheight);
+        console.log("firstWidth : " + firstwidth);
+        console.log("firstheight : " + firstheight);
 
     },
 
@@ -108,9 +110,9 @@ var mainState = {
         //ROCKS
         this.rocks = game.add.group();
         this.rocks.enableBody = true;
-        this.rocks.createMultiple(10, 'rock');
+        this.rocks.createMultiple(50, 'rock');
 
-        this.timer = game.time.events.loop(5000, this.addRowOfrocks, this);
+        this.timer = game.time.events.loop(3000, this.addRowOfrocks, this);
 
 
         //PLAYER
@@ -143,10 +145,10 @@ var mainState = {
     ///////////////////////////////////////////////
 
     update: function () {
-        this.ground.tilePosition.x -= 3.3;
-        this.back_04.tilePosition.x -= 0.2;
-        this.back_03.tilePosition.x -= 0.4;
-        this.back_02.tilePosition.x -= 0.8;
+        this.ground.tilePosition.x -= (3*speed);
+        this.back_04.tilePosition.x -= (0.2*speed);
+        this.back_03.tilePosition.x -= (0.4*speed);
+        this.back_02.tilePosition.x -= (0.8*speed);
 
         game.physics.arcade.collide(this.dude, platforms);
 
@@ -175,7 +177,7 @@ var mainState = {
 
 
         this.collides(this.rocks, this.dude)
-            //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
+        //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
 
 
     },
@@ -195,29 +197,22 @@ var mainState = {
         rock.reset(x, y);
 
         // Add velocity to the rock to make it move left
-        rock.body.velocity.x = -200;
+        rock.body.velocity.x = -(180*speed);
 
         // Kill the rock when it's no longer visible 
         rock.checkWorldBounds = true;
         rock.outOfBoundsKill = true;
         rock.body.immovable = true;
-
-
     },
 
     addRowOfrocks: function () {
-        var obstacleNumber = Math.floor((Math.random() * 6) + 1);
+        var obstacleNumber = Math.floor((Math.random() * 3) + 1);
+        console.log("obstacleNumber : " + obstacleNumber);
+        console.log("speed : " + speed);
         for (var i = 0; i < obstacleNumber; i++)
-            this.addOnerock(i * 150 + firstwidth, firstheight - 72);
+            this.addOnerock(i * (Math.floor((Math.random() * 170) + 130)) + firstwidth, firstheight - 72);
+            //speed = speed * 1.1;
 
-        //this.addOnerock(0 + firstwidth, firstheight - 272);
-
-        // Updated upstream
-        //
-        //                        for (var i = 0; i < 3; i++)
-        //                            if (i != hole && i != hole + 1)
-        //                                this.addOnerock(800 * i + firstwidth, firstheight - 72);
-        // Stashed changes
     },
 
 
@@ -231,6 +226,7 @@ var mainState = {
     restartGame: function () {
         game.state.start('main');
         this.die.play();
+        speed = 1;
     },
 
     collides: function (a, b) {
