@@ -2,6 +2,7 @@
 
 var firstheight = window.innerHeight;
 var firstwidth = window.innerWidth;
+
 var game = new Phaser.Game(firstwidth, firstheight, Phaser.AUTO, 'gameDiv');
 
 $(window).resize(function () {
@@ -38,9 +39,6 @@ var display = {
     }
 };
 
-//var canvasH = 350,
-//    canvasW = 600;
-//var game = new Phaser.Game(canvasW, canvasH, Phaser.AUTO, 'gameDiv');
 
 var platforms;
 
@@ -58,24 +56,21 @@ var mainState = {
         this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
         // SOL
-        this.game.load.image('ground', 'assets/ground.png');
+        this.game.load.image('ground', 'assets/ground_mario.png');
 
         // OBSTACLES
-        this.game.load.image('rock', 'assets/rocks.png');
+        this.game.load.image('rock', 'assets/rock_mario.png');
 
 
         // BACKGROUND
         this.game.load.image('vide', 'assets/empty.png');
-        this.game.load.image('back', 'assets/bg_01.jpg');
-        this.game.load.image('back_02', 'assets/bg_02.png');
-        this.game.load.image('back_03', 'assets/bg_03.png');
-        this.game.load.image('back_04', 'assets/bg_04.png');
+        this.game.load.image('back', 'assets/bg_01_mario.jpg');
+        this.game.load.image('back_02', 'assets/bg_02_mario.png');
+        this.game.load.image('back_03', 'assets/bg_03_mario.png');
+        this.game.load.image('back_04', 'assets/bg_04_mario.png');
 
         //SOUND
         this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
-
-        console.log(firstwidth);
-        console.log(firstheight);
 
     },
 
@@ -88,11 +83,12 @@ var mainState = {
     create: function () {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        this.back = this.game.add.tileSprite(0, 0, firstwidth, 600, 'back');
-        this.back_04 = this.game.add.tileSprite(0, firstheight - 318, firstwidth, 318, 'back_04');
-        this.back_03 = this.game.add.tileSprite(0, firstheight - 254, firstwidth, 254, 'back_03');
-        this.back_02 = this.game.add.tileSprite(0, firstheight - 172, firstwidth, 172, 'back_02');
+        
+        game.stage.backgroundColor = "70ccfd";
+        this.back = this.game.add.tileSprite(0, 0, firstwidth, 500, 'back');
+        this.back_04 = this.game.add.tileSprite(0, firstheight - 318 - 50, firstwidth, 318, 'back_04');
+        this.back_03 = this.game.add.tileSprite(0, firstheight - 254 - 50, firstwidth, 254, 'back_03');
+        this.back_02 = this.game.add.tileSprite(0, firstheight - 172 - 50, firstwidth, 172, 'back_02');
         this.vide = game.add.tileSprite(50, firstheight - 139, 'vide');
         this.ground = game.add.tileSprite(0, firstheight - 50, firstwidth, 91, 'ground');
 
@@ -122,7 +118,6 @@ var mainState = {
         this.dude.animations.add('run', [5, 6, 7, 8], 10, true);
         this.dude.animations.add('space', [6], 10, true);
         this.dude.animations.add('stop', [4], 10, true);
-
 
         //SPACEKEYKE
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -174,12 +169,11 @@ var mainState = {
         }
 
 
-        this.collides(this.rocks, this.dude)
-            //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
+        //        this.collides(this.rocks, this.dude)
+        //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
 
 
     },
-
 
     ///////////////////////////////////////////////
     //            
@@ -208,7 +202,7 @@ var mainState = {
     addRowOfrocks: function () {
         var obstacleNumber = Math.floor((Math.random() * 6) + 1);
         for (var i = 0; i < obstacleNumber; i++)
-            this.addOnerock(i * 150 + firstwidth, firstheight - 72);
+            this.addOnerock(i * 150 + firstwidth, firstheight - 82);
 
         //this.addOnerock(0 + firstwidth, firstheight - 272);
 
@@ -219,8 +213,6 @@ var mainState = {
         //                                this.addOnerock(800 * i + firstwidth, firstheight - 72);
         // Stashed changes
     },
-
-
 
     ///////////////////////////////////////////////
     //            
