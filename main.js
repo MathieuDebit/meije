@@ -5,7 +5,7 @@ var canvasH = 550,
 var game = new Phaser.Game(canvasW, canvasH, Phaser.AUTO, 'gameDiv');
 
 var platforms;
-
+var randomGap = 0;
 
 var mainState = {
 
@@ -18,8 +18,8 @@ var mainState = {
     preload: function () {
         // PLAYER
         this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        
         // SOL
-
         this.game.load.image('ground', 'assets/ground.png');
 
         // OBSTACLES
@@ -62,10 +62,9 @@ var mainState = {
         //ROCKS
         this.rocks = game.add.group();
         this.rocks.enableBody = true;
-        this.rocks.createMultiple(20, 'rock');
+        this.rocks.createMultiple(50, 'rock');
 
-        game.time.events.repeat(Phaser.Timer.SECOND, 30, this.addRowOfrocks, this);
-        //this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
+        this.timer = game.time.events.loop(2000, this.addRowOfrocks, this);
 
 
         //PLAYER
@@ -130,7 +129,7 @@ var mainState = {
 
 
         this.collides(this.rocks, this.dude)
-            //        game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
+        //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
 
 
     },
@@ -162,13 +161,11 @@ var mainState = {
 
     addRowOfrocks: function () {
         // Pick where the hole will be
-        var hole = Math.floor(Math.random() * 6) + 1;
+        var hole = Math.floor(Math.random() * 60) + 30;
 
-        // Add the 6 pipes 
-        var random = Math.floor(Math.random() * 3) + 1;
-        for (var i = 0; i < random; i++)
+        for (var i = 0; i < 3; i++)
             if (i != hole && i != hole + 1)
-                this.addOnerock(300 * i + canvasW, canvasH - 72);
+                this.addOnerock(30*i + canvasW, canvasH - 72);
     },
 
     ///////////////////////////////////////////////
