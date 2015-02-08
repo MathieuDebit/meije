@@ -90,18 +90,18 @@ var mainState = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.back = this.game.add.tileSprite(0, 0, firstwidth, 600, 'back');
-        this.back_04 = this.game.add.tileSprite(0, game.world.height - 318, firstwidth, 318, 'back_04');
-        this.back_03 = this.game.add.tileSprite(0, game.world.height - 254, firstwidth, 254, 'back_03');
-        this.back_02 = this.game.add.tileSprite(0, game.world.height - 172, firstwidth, 172, 'back_02');
+        this.back_04 = this.game.add.tileSprite(0, firstheight - 318, firstwidth, 318, 'back_04');
+        this.back_03 = this.game.add.tileSprite(0, firstheight - 254, firstwidth, 254, 'back_03');
+        this.back_02 = this.game.add.tileSprite(0, firstheight - 172, firstwidth, 172, 'back_02');
         this.vide = game.add.tileSprite(50, firstheight - 139, 'vide');
-        this.ground = game.add.tileSprite(0, game.world.height - 50, firstwidth, 91, 'ground');
+        this.ground = game.add.tileSprite(0, firstheight - 50, firstwidth, 91, 'ground');
 
         this.die = game.add.audio('die');
 
         //PLATEFORMS
         platforms = game.add.group();
         platforms.enableBody = true;
-        var ground = platforms.create(106, game.world.height - 50, 'vide');
+        var ground = platforms.create(firstwidth / 6, firstheight - 50, 'vide');
         ground.body.immovable = true;
 
 
@@ -240,10 +240,6 @@ var mainState = {
         }
 
     },
-
-
-
-
 
 };
 
