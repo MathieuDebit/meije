@@ -5,42 +5,37 @@ var firstwidth = window.innerWidth;
 
 var game = new Phaser.Game(firstwidth, firstheight, Phaser.AUTO, 'gameDiv');
 
+// SCORE
+var timer;
+var total = 0;
+var highscore = 0;
+
+// RESPONSIVE
 $(window).resize(function () {
     display.resizer();
 });
 
 var display = {
-
     resizer: function () {
-
         var myheight = $(window).innerHeight();
         var mywidth = $(window).innerWidth();
-
         try {
-
             game.width = Number(mywidth);
             game.height = Number(myheight);
             game.stage.bounds.width = Number(mywidth);
             game.stage.bounds.height = Number(myheight);
-
             game.renderer.resize(Number(mywidth), Number(myheight));
-
             firstwidth = Number(mywidth);
             firstheight = Number(myheight);
-
             Phaser.Canvas.setSmoothingEnabled(game.context, false);
-
         } catch (e) {
-
             console.log("Error description: " + e.message + "");
-
         }
-
     }
 };
 
-
-var platforms;
+// PLATEFORMS
+var platforms; 
 
 var mainState = {
 
@@ -83,7 +78,7 @@ var mainState = {
     create: function () {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        
+
         game.stage.backgroundColor = "70ccfd";
         this.back = this.game.add.tileSprite(0, 0, firstwidth, 500, 'back');
         this.back_04 = this.game.add.tileSprite(0, firstheight - 318 - 50, firstwidth, 318, 'back_04');
@@ -119,16 +114,20 @@ var mainState = {
         this.dude.animations.add('space', [6], 10, true);
         this.dude.animations.add('stop', [4], 10, true);
 
-        //SPACEKEYKE
+        //KEYS
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
+        this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
+        this.escapeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
         //DOUBLE SAUT
         this.compte = 0;
 
         //SCORE
+        score = game.time.create(false);
+        //score.loop(2000, updateCounter, this);
+        score.start();
 
-
+        
     },
 
     ///////////////////////////////////////////////
@@ -147,8 +146,8 @@ var mainState = {
 
         // Double saut
         if (this.compte < 2) {
-            if (this.spaceKey.isDown) {
-                if (this.spaceKey.downDuration(5)) {
+            if (this.spaceKey.isDown || this.upKey.isDown) {
+                if (this.spaceKey.downDuration(5) || this.upKey.downDuration(5)) {
                     this.compte = this.compte + 1;
                     game.physics.arcade.enable(this.dude);
                     this.dude.body.gravity.y = 1000;
@@ -168,10 +167,13 @@ var mainState = {
             this.restartGame();
         }
 
+        this.collides(this.rocks, this.dude)
 
-        //        this.collides(this.rocks, this.dude)
-        //game.physics.collide(this.dude, this.rock, collisionHandler, null, this);
+        // SCORE 
 
+        total++;
+        game.debug.text('Score : ' + total, 32, 32);
+        game.debug.text('HighScore : ' + highscore, 32, 32 * 1.5);
 
     },
 
@@ -223,6 +225,11 @@ var mainState = {
     restartGame: function () {
         game.state.start('main');
         this.die.play();
+
+        if (total > highscore) {
+            highscore = total;
+            total = 0
+        }
     },
 
     collides: function (a, b) {
