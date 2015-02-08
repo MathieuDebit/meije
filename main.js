@@ -66,9 +66,9 @@ var mainState = {
         //ROCKS
         this.rocks = game.add.group();
         this.rocks.enableBody = true;
-        this.rocks.createMultiple(50, 'rock');
+        this.rocks.createMultiple(10, 'rock');
 
-        this.timer = game.time.events.loop(2000, this.addRowOfrocks, this);
+        this.timer = game.time.events.loop(5000, this.addRowOfrocks, this);
 
 
         //PLAYER
@@ -85,11 +85,12 @@ var mainState = {
         //SPACEKEYKE
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+
         //DOUBLE SAUT
         this.compte = 0;
 
-        //SCORE
 
+        //SCORE
 
 
     },
@@ -164,12 +165,12 @@ var mainState = {
     },
 
     addRowOfrocks: function () {
-        // Pick where the hole will be
-        var hole = Math.floor(Math.random() * 60) + 30;
+        var obstacleNumber = Math.floor((Math.random() * 6) + 1);
+        for (var i = 0; i < obstacleNumber; i++)
+            this.addOnerock(i*150 + canvasW, canvasH - 72);
 
-        for (var i = 0; i < 3; i++)
-            if (i != hole && i != hole + 1)
-                this.addOnerock(800*i + canvasW, canvasH - 72);
+        //this.addOnerock(0 + canvasW, canvasH - 272);
+
     },
 
     ///////////////////////////////////////////////
