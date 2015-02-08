@@ -101,7 +101,7 @@ var mainState = {
         this.rocks.enableBody = true;
         this.rocks.createMultiple(10, 'rock');
 
-        this.timer = game.time.events.loop(5000, this.addRowOfrocks, this);
+        this.timer = game.time.events.loop(2000, this.addRowOfrocks, this);
 
 
         //PLAYER
@@ -176,9 +176,9 @@ var mainState = {
 
         // SCORE 
 
-        total++;
-        game.debug.text('Score : ' + total, 32, 32);
-        game.debug.text('HighScore : ' + highscore, 32, 32 * 1.5);
+        total += 0.1;
+        game.debug.text('Score : ' + parseInt(total), 32, 32);
+        game.debug.text('High Score : ' + highscore, 32, 32 * 1.5);
 
     },
 
@@ -196,7 +196,7 @@ var mainState = {
         rock.reset(x, y);
 
         // Add velocity to the rock to make it move left
-        rock.body.velocity.x = -200;
+        rock.body.velocity.x = -198;
 
         // Kill the rock when it's no longer visible 
         rock.checkWorldBounds = true;
@@ -207,18 +207,12 @@ var mainState = {
     },
 
     addRowOfrocks: function () {
-        var obstacleNumber = Math.floor((Math.random() * 6) + 1);
+        var obstacleNumber = Math.floor((Math.random() * 3) + 1);
+        console.log("obstacleNumber : " + obstacleNumber);
         for (var i = 0; i < obstacleNumber; i++)
-            this.addOnerock(i * 150 + firstwidth, firstheight - 82);
+            this.addOnerock(i*Math.floor((Math.random() * 170) + 130) + firstwidth, firstheight - 82);
 
-        //this.addOnerock(0 + firstwidth, firstheight - 272);
 
-        // Updated upstream
-        //
-        //                        for (var i = 0; i < 3; i++)
-        //                            if (i != hole && i != hole + 1)
-        //                                this.addOnerock(800 * i + firstwidth, firstheight - 72);
-        // Stashed changes
     },
 
     ///////////////////////////////////////////////
