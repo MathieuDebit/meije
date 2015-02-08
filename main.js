@@ -137,6 +137,11 @@ var mainState = {
     ///////////////////////////////////////////////
 
     update: function () {
+        
+        if (localStorage.getItem("hg")) {
+        highscore = localStorage.getItem("hg");
+    }
+        
         this.ground.tilePosition.x -= 3.3;
         this.back_04.tilePosition.x -= 0.2;
         this.back_03.tilePosition.x -= 0.4;
@@ -230,6 +235,8 @@ var mainState = {
             highscore = total;
             total = 0
         }
+        
+        localStorage.setItem("hg", highscore);
     },
 
     collides: function (a, b) {
