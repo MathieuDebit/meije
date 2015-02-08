@@ -35,7 +35,7 @@ var display = {
 };
 
 // PLATEFORMS
-var platforms; 
+var platforms;
 
 var mainState = {
 
@@ -59,10 +59,11 @@ var mainState = {
 
         // BACKGROUND
         this.game.load.image('vide', 'assets/empty.png');
-        this.game.load.image('back', 'assets/bg_01_mario.jpg');
-        this.game.load.image('back_02', 'assets/bg_02_mario.png');
-        this.game.load.image('back_03', 'assets/bg_03_mario.png');
-        this.game.load.image('back_04', 'assets/bg_04_mario.png');
+        this.game.load.image('back', 'assets/bg.png');
+        this.game.load.image('stars', 'assets/stars.png');
+        this.game.load.image('back_02', 'assets/m_three.png');
+        this.game.load.image('back_03', 'assets/m_two.png');
+        this.game.load.image('back_04', 'assets/m_one.png');
 
         //SOUND
         this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
@@ -79,11 +80,12 @@ var mainState = {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        game.stage.backgroundColor = "70ccfd";
-        this.back = this.game.add.tileSprite(0, 0, firstwidth, 500, 'back');
-        this.back_04 = this.game.add.tileSprite(0, firstheight - 318 - 50, firstwidth, 318, 'back_04');
-        this.back_03 = this.game.add.tileSprite(0, firstheight - 254 - 50, firstwidth, 254, 'back_03');
-        this.back_02 = this.game.add.tileSprite(0, firstheight - 172 - 50, firstwidth, 172, 'back_02');
+        game.stage.backgroundColor = "70cfff";
+        this.back = this.game.add.tileSprite(0, 0, firstwidth, 376, 'back');
+        this.stars = this.game.add.tileSprite(0, 0, firstwidth, 376, 'stars');
+        this.back_02 = this.game.add.tileSprite(0, firstheight - 376 - 50, firstwidth, 376, 'back_02');
+        this.back_03 = this.game.add.tileSprite(0, firstheight - 376 - 50, firstwidth, 376, 'back_03');
+        this.back_04 = this.game.add.tileSprite(0, firstheight - 376 - 50, firstwidth, 376, 'back_04');
         this.vide = game.add.tileSprite(50, firstheight - 139, 'vide');
         this.ground = game.add.tileSprite(0, firstheight - 50, firstwidth, 91, 'ground');
 
@@ -123,11 +125,7 @@ var mainState = {
         this.compte = 0;
 
         //SCORE
-        score = game.time.create(false);
-        //score.loop(2000, updateCounter, this);
-        score.start();
 
-        
     },
 
     ///////////////////////////////////////////////
@@ -137,15 +135,16 @@ var mainState = {
     ///////////////////////////////////////////////
 
     update: function () {
-        
+
         if (localStorage.getItem("hg")) {
-        highscore = localStorage.getItem("hg");
-    }
-        
+            highscore = localStorage.getItem("hg");
+        }
+
         this.ground.tilePosition.x -= 3.3;
-        this.back_04.tilePosition.x -= 0.2;
-        this.back_03.tilePosition.x -= 0.4;
-        this.back_02.tilePosition.x -= 0.8;
+        this.stars.tilePosition.x -= 0.1;
+        this.back_02.tilePosition.x -= 0.2;
+        this.back_03.tilePosition.x -= 0.3;
+        this.back_04.tilePosition.x -= 0.4;
 
         game.physics.arcade.collide(this.dude, platforms);
 
@@ -229,13 +228,13 @@ var mainState = {
 
     restartGame: function () {
         game.state.start('main');
-        this.die.play();
+        //        this.die.play();
 
         if (total > highscore) {
             highscore = total;
-            total = 0
         }
-        
+        total = 0;
+
         localStorage.setItem("hg", highscore);
     },
 
