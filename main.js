@@ -1,7 +1,7 @@
 // main.js
 
-var canvasH = 550,
-    canvasW = 800;
+var canvasH = 350,
+    canvasW = 600;
 var game = new Phaser.Game(canvasW, canvasH, Phaser.AUTO, 'gameDiv');
 
 var platforms;
@@ -32,6 +32,10 @@ var mainState = {
         this.game.load.image('back_02', 'assets/bg_02.png');
         this.game.load.image('back_03', 'assets/bg_03.png');
         this.game.load.image('back_04', 'assets/bg_04.png');
+        
+        //SOUND
+        this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
+
     },
 
     ///////////////////////////////////////////////
@@ -50,7 +54,8 @@ var mainState = {
         this.back_02 = this.game.add.tileSprite(0, game.world.height - 172, canvasW, 172, 'back_02');
         this.vide = game.add.tileSprite(50, canvasH - 139, 'vide');
         this.ground = game.add.tileSprite(0, game.world.height - 50, canvasW, 91, 'ground');
-
+        
+        this.die = game.add.audio('die');
 
         //PLATEFORMS
         platforms = game.add.group();
@@ -179,6 +184,7 @@ var mainState = {
 
     restartGame: function () {
         game.state.start('main');
+        this.die.play();
     },
 
     collides: function (a, b) {
