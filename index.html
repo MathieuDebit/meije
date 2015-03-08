@@ -4,21 +4,48 @@
 <head>
     <meta charset="utf-8" />
     <title>- MEIJE -</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="phaser.min.js"></script>
     <script type="text/javascript" src="main.js"></script>
+    <!--    <script type="text/javascript" src="game.js"></script>-->
 
     <style>
-      html, body {
-width: 100%;
-height: 100%;
-padding: 0;
-margin: 0;
-background-color:#777070;}
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            background-color: #777070;
+        }
+        
+        .guide_h {
+            display: block;
+            height: 1px;
+            width: 100%;
+            background: #000;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            z-index: 50;
+        }
+        
+        .guide_v {
+            display: block;
+            height: 100%;
+            width: 1px;
+            background: #000;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            z-index: 51;
+        }
     </style>
 </head>
 
 <body>
+    <!--   <div class="guide_h"></div>-->
+    <!--   <div class="guide_v"></div>-->
     <div id="gameDiv"> </div>
 
 </body>
