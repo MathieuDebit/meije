@@ -1,7 +1,13 @@
 // main.js
 
+var easy = 1,
+    maxDifficulty = 1000;
+
 var h_window = window.innerHeight,
     w_window = window.innerWidth;
+
+
+
 
 var game = new Phaser.Game(w_window, h_window, Phaser.AUTO, 'gameDiv');
 
@@ -53,7 +59,7 @@ var mainState = {
         this.game.load.image('ground', 'assets/ground_mario.png');
 
         // OBSTACLES
-        this.game.load.image('rock', 'assets/rock_mario.png');
+        this.game.load.image('rock', 'assets/mouton64.png');
         this.game.load.image('tronc', 'assets/tronc.png');
 
         // BACKGROUND
@@ -93,8 +99,15 @@ var mainState = {
         this.back_02 = this.game.add.tileSprite(0, h_window - 376 - 50, w_window, 376, 'back_02');
         this.back_03 = this.game.add.tileSprite(0, h_window - 376 - 50, w_window, 376, 'back_03');
         this.back_04 = this.game.add.tileSprite(0, h_window - 376 - 50, w_window, 376, 'back_04');
-        this.vide = this.game.add.tileSprite(50, h_window - 139, 'vide');
+        this.vide = this.game.add.tileSprite(w_window, h_window - 139, 'vide');
         this.ground = this.game.add.tileSprite(0, h_window - 50, w_window, 91, 'ground');
+
+//        this.vide = this.game.add.rectangle(0, h_window-50, w_window, 1);
+
+        this.speed = 3.3;
+        this.maxSpeed = 10;
+        this.frames = 0;
+
 
         //ROCKS
         this.die = game.add.audio('die');
@@ -108,8 +121,17 @@ var mainState = {
         //ROCKS
         this.rocks = game.add.group();
         this.rocks.enableBody = true;
-        this.rocks.createMultiple(10, 'rock');
-        this.timer = game.time.events.loop(5000, this.addRowOfrocks, this);
+        this.rocks.createMultiple(50, 'rock');
+
+
+
+        console.log(this.rocks);
+
+      /*  var rdmTime = Math.max(Math.random()*1000 + easy, 1000);
+
+        console.log(rdmTime);
+
+        this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);*/
 
         //PLAYER
         this.dude = this.game.add.sprite(w_window / 6, h_window - 98, 'dude');
@@ -140,15 +162,43 @@ var mainState = {
     ///////////////////////////////////////////////
 
     update: function () {
-        
+
+//
+//        var rdmTime = Math.max(Math.random()*1000 + easy, 1000);
+//
+//        console.log(rdmTime);
+//
+//
+//        this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
+
+
+
+        this.frames++;
+        easy = Math.max (easy-0.0001, 0.99);
+
+        if( Math.random() >  easy){
+            this.addRowOfrocks();
+        }
+
+        if(this.speed < this.maxSpeed)
+            this.speed += 0.001;
+
         if (localStorage.getItem("highscore")) {
             highscore = localStorage.getItem("highscore");
         }
-        this.ground.tilePosition.x -= 3.3;
+
+        this.ground.tilePosition.x -= this.speed;
         this.stars.tilePosition.x -= 0.1;
         this.back_02.tilePosition.x -= 0.2;
         this.back_03.tilePosition.x -= 0.3;
         this.back_04.tilePosition.x -= 0.4;
+
+
+        for(var i in this.rocks.children){
+            this.rocks.children[i].body.x -= this.speed;
+
+        };
+
         game.physics.arcade.collide(this.dude, platforms);
 
         // Double saut
@@ -158,7 +208,7 @@ var mainState = {
                     this.compteNbSaut = this.compteNbSaut + 1;
                     game.physics.arcade.enable(this.dude);
                     this.dude.body.gravity.y = 1000;
-                    this.dude.body.velocity.y = -350;
+                    this.dude.body.velocity.y = -550;
                 }
             }
         }
@@ -200,21 +250,35 @@ var mainState = {
         rock.reset(x, y);
 
         // Add velocity to the rock to make it move left
-        rock.body.velocity.x = -198;
+        rock.body.velocity.x = 0;
+        rock.body.velocity.y = 0;
+
+
 
         // Kill the rock when it's no longer visible 
         rock.checkWorldBounds = true;
         rock.outOfBoundsKill = true;
         rock.body.immovable = true;
+
+        console.log(rock);
+
+//        this.rocks.push(rock);
+
     },
 
     addRowOfrocks: function () {
-        var obstacleNumber = Math.floor((Math.random() * 3) + 1);
-        console.log("obstacleNumber : " + obstacleNumber);
+        var obstacleNumber = Math.round(Math.random() + 1);
+//        console.log("obstacleNumber : " + obstacleNumber);
         for (var i = 0; i < obstacleNumber; i++)
-            this.addOnerock(i * Math.floor((Math.random() * 170) + 130) + w_window, h_window - 82);
+//            this.addOnerock(i * Math.floor((Math.random() * 170) + 130) + w_window, h_window - 82);
+            this.addOnerock(i*32 + w_window, h_window - 110);
+
+
+//            this.addOnerock(w_window+20, h_window - 82);
+
+
         // repert pour voir le loop de la fonction
-        this.addOnerock(w_window, h_window - 282);
+//        this.addOnerock(w_window, h_window - 282);
     },
 
     ///////////////////////////////////////////////
@@ -237,6 +301,8 @@ var mainState = {
     collides: function (a, b) {
         var collision = game.physics.arcade.collide(a, b);
         if (collision) {
+            console.log(collision);
+
             this.restartGame();
         }
     }
