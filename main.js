@@ -159,14 +159,13 @@ var mainState = {
        // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
 
         var dif=Math.random();
-        //easy-=0.01;
-        easy = Math.max(easy-0.001, 0.99);
+        easy = 0.987;
         //console.log('easy = ' + easy + ', dif = ' + dif);
 
         
         if( dif >  easy){
             this.addRowOfrocks();
-            //console.log('condition : ' + dif)
+            //console.log('condition : ' + dif + ' > ' + easy)
         }
 
         if(this.speed < this.maxSpeed)
@@ -184,9 +183,10 @@ var mainState = {
 
         };
 
-        
+
 
         // Double saut
+
         if (this.compteNbSaut < 2) {
             if (this.spaceKey.isDown || this.upKey.isDown) {
                 if (this.spaceKey.downDuration(5) || this.upKey.downDuration(5)) {
@@ -196,6 +196,14 @@ var mainState = {
                     this.dude.body.velocity.y = -600;
                 }
             }
+            function doSomething() {
+                this.compteNbSaut = this.compteNbSaut + 1;
+                game.physics.arcade.enable(this.dude);
+                this.dude.body.gravity.y = 1600;
+                this.dude.body.velocity.y = -600;
+            }
+
+            game.input.onDown.add(doSomething, this);
         }
         if (this.dude.body.velocity.y !== 0) {
             this.dude.play('space');
