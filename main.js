@@ -242,7 +242,7 @@ var mainState = {
     },
 
     addRowOfrocks: function () {
-        this.addOnerock(w_window, h_window - 110);
+        this.addOnerock(w_window, h_window - 112);
     },
 
 
