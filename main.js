@@ -1,10 +1,22 @@
 var overlay = document.getElementById('overlay'),
     start_button = overlay.firstElementChild;
 
-start_button.onclick = function() {
+start_button.onclick = function () {
 
     overlay.style.display = "none";
 
+    $(function () {
+        $("#pauseButton").text("Pause").data("paused", false).click(function () {
+            $(this).data("paused", !$(this).data("paused"));
+            if ($(this).data("paused")) {
+                $(this).text("Resume");
+                game.paused = true;
+            } else {
+                $(this).text("Pause");
+                game.paused = false;
+            }
+        })
+    });
     // PHAZER -- BEGIN
     // main.js
 
@@ -16,14 +28,15 @@ start_button.onclick = function() {
 
     var game = new Phaser.Game(w_window, h_window, Phaser.AUTO, 'gameDiv');
 
-// SCORE
+    // SCORE
     var timer, total = 0,
         highscore = 0;
 
-// PLATEFORMS
+    // PLATEFORMS
     var platforms;
 
-// RESPONSIVE
+    // RESPONSIVE
+
     $(window).resize(function () {
         display.resizer();
     });
@@ -58,26 +71,26 @@ start_button.onclick = function() {
         preload: function () {
 
             // PLAYER
-            this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+            this.game.load.spritesheet('dude', 'assets/hex_run.png', 69, 84);
 
             // SOL
-            this.game.load.image('ground', 'assets/ground_mario.png');
+            this.game.load.image('ground', 'assets/hex_ground.png');
 
             // OBSTACLES
-            this.game.load.image('rock', 'assets/mouton64.png');
+            this.game.load.image('rock', 'assets/hex_obs.png');
             this.game.load.image('tronc', 'assets/tronc.png');
 
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
-            this.game.load.image('back', 'assets/bg.png');
+            this.game.load.image('back', 'assets/hex_sky.png');
             this.game.load.image('stars', 'assets/stars.png');
             this.game.load.image('back_02', 'assets/m_three.png');
             this.game.load.image('back_03', 'assets/m_two.png');
             this.game.load.image('back_04', 'assets/m_one.png');
 
             //SOUND
-            this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
-            this.game.load.audio('ost', ['assets/Meije_OST_0.mp3']);
+            //                this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
+            //                this.game.load.audio('ost', ['assets/Meije_OST_0.mp3']);
 
             //MENU
             this.game.load.image('menu1', 'assets/menu-1.png', 270, 50);
@@ -99,13 +112,18 @@ start_button.onclick = function() {
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
             this.game.stage.backgroundColor = "70cfff";
-            this.back = this.game.add.tileSprite(0, 0, w_window, 376, 'back');
+            this.back = this.game.add.sprite(338, 220, 'back');
+            this.back.x = 0;
+            this.back.y = 0;
+            this.back.height = h_window;
+            this.back.width = w_window;
+            this.back.smoothed = false;
             this.stars = this.game.add.tileSprite(0, 0, w_window, 376, 'stars');
-            this.back_02 = this.game.add.tileSprite(0, h_window - 376 - 50, w_window, 376, 'back_02');
-            this.back_03 = this.game.add.tileSprite(0, h_window - 376 - 50, w_window, 376, 'back_03');
-            this.back_04 = this.game.add.tileSprite(0, h_window - 376 - 50, w_window, 376, 'back_04');
+            this.back_02 = this.game.add.tileSprite(0, h_window - 376 - 90, w_window, 376, 'back_02');
+            this.back_03 = this.game.add.tileSprite(0, h_window - 376 - 90, w_window, 376, 'back_03');
+            this.back_04 = this.game.add.tileSprite(0, h_window - 376 - 90, w_window, 376, 'back_04');
             this.vide = this.game.add.tileSprite(w_window, h_window - 139, 'vide');
-            this.ground = this.game.add.tileSprite(0, h_window - 50, w_window, 91, 'ground');
+            this.ground = this.game.add.tileSprite(0, h_window - 90, w_window, 91, 'ground');
             //this.vide = this.game.add.rectangle(0, h_window-50, w_window, 1);
 
             this.speed = 4;
@@ -114,7 +132,7 @@ start_button.onclick = function() {
             //PLATEFORMS
             platforms = game.add.group();
             platforms.enableBody = true;
-            var ground = platforms.create(w_window / 6, h_window - 50, 'vide');
+            var ground = platforms.create(w_window / 6, h_window - 90, 'vide');
             ground.body.immovable = true;
 
             //ROCKS
@@ -127,11 +145,11 @@ start_button.onclick = function() {
             // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
 
             //PLAYER
-            this.dude = this.game.add.sprite(w_window / 6, h_window - 98, 'dude');
+            this.dude = this.game.add.sprite(w_window / 6, h_window - 84 - 90, 'dude');
             game.physics.enable(this.dude, Phaser.Physics.ARCADE);
             this.dude.enableBody = true;
-            this.dude.animations.add('run', [5, 6, 7, 8], 10, true);
-            this.dude.animations.add('space', [6], 10, true);
+            this.dude.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
+            this.dude.animations.add('space', [8, 9], 10, true);
 
             //KEYS
             this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -144,7 +162,7 @@ start_button.onclick = function() {
 
             //MUSIC
             this.die = game.add.audio('die');
-            this.music = this.game.add.audio('ost',true);
+            this.music = this.game.add.audio('ost', true);
             this.music.loop = true;
             this.music.play();
         },
@@ -167,17 +185,17 @@ start_button.onclick = function() {
             // console.log(rdmTime);
             // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
 
-            var dif=Math.random();
+            var dif = Math.random();
             easy = 0.989;
             //console.log('easy = ' + easy + ', dif = ' + dif);
 
 
-            if( dif >  easy){
+            if (dif > easy) {
                 this.addRowOfrocks();
                 //console.log('condition : ' + dif + ' > ' + easy)
             }
 
-            if(this.speed < this.maxSpeed)
+            if (this.speed < this.maxSpeed)
                 this.speed += 0.001;
 
 
@@ -187,7 +205,7 @@ start_button.onclick = function() {
             this.back_02.tilePosition.x -= 0.2;
             this.back_03.tilePosition.x -= 0.3;
             this.back_04.tilePosition.x -= 0.4;
-            for(var i in this.rocks.children){
+            for (var i in this.rocks.children) {
                 this.rocks.children[i].body.x -= this.speed;
 
             };
@@ -207,23 +225,23 @@ start_button.onclick = function() {
                 }
 
             }
-                /*if (this.mouseDown.isDown) {
+            /*if (this.mouseDown.isDown) {
+                this.compteNbSaut = this.compteNbSaut + 1;
+                game.physics.arcade.enable(this.dude);
+                this.dude.body.gravity.y = 1600;
+                this.dude.body.velocity.y = -600;
+            }*/
+
+            game.input.onDown.add(function () {
+                if (this.compteNbSaut < 2) {
                     this.compteNbSaut = this.compteNbSaut + 1;
                     game.physics.arcade.enable(this.dude);
                     this.dude.body.gravity.y = 1600;
                     this.dude.body.velocity.y = -600;
-                }*/
-
-                game.input.onDown.add(function() {
-                        if (this.compteNbSaut < 2) {
-                            this.compteNbSaut = this.compteNbSaut + 1;
-                            game.physics.arcade.enable(this.dude);
-                            this.dude.body.gravity.y = 1600;
-                            this.dude.body.velocity.y = -600;
-                            this.stop();
-                            console.log(this.compteNbSaut);
-                        }
-                }, this);
+                    this.stop();
+                    console.log(this.compteNbSaut);
+                }
+            }, this);
 
 
             if (this.dude.body.velocity.y !== 0) {
@@ -267,11 +285,9 @@ start_button.onclick = function() {
             rock.body.immovable = true;
 
             //this.rocks.push(rock);
-
         },
-
         addRowOfrocks: function () {
-            this.addOnerock(w_window, h_window - 112);
+            this.addOnerock(w_window, h_window - 57 - 90);
         },
 
 

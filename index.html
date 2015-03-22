@@ -12,7 +12,6 @@
         window.onresize = function () {
             location.reload();
         }
-
     </script>
     <style>
         html,
@@ -23,8 +22,8 @@
             margin: 0;
             background-color: #777070;
         }
-
-        #overlay{
+        
+        #overlay {
             position: absolute;
             height: 100%;
             width: 100%;
@@ -32,8 +31,8 @@
             opacity: 0.7;
             text-align: center;
         }
-
-        #button-start{
+        
+        #button-start {
             display: inline-block;
             margin-top: 275px;
             width: 200px;
@@ -41,10 +40,18 @@
             background-color: red;
             cursor: pointer;
         }
+        
+        #pauseButton {
+            display: block;
+            position: absolute;
+            right: 30px;
+            top: 30px;
+        }
     </style>
 </head>
 
 <body>
+    <button id="pauseButton"></button>
     <div id="overlay">
         <div id="button-start"></div>
     </div>
@@ -52,6 +59,8 @@
     <!--   <div class="guide_v"></div>-->
     <div id="gameDiv"> </div>
     <script type="text/javascript" src="main.js"></script>
+
+    
 </body>
 
 </html>
