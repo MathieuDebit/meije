@@ -1,22 +1,48 @@
 var overlay = document.getElementById('overlay'),
     start_button = overlay.firstElementChild;
 
-start_button.onclick = function () {
+var unefois = true;
+document.onkeydown = function (event) {
+    var key_press = String.fromCharCode(event.keyCode);
+    var key_code = event.keyCode;
 
+    if (key_code == 32 && unefois) {
+        start_button.onclick();
+    }
+
+}
+
+start_button.onclick = function () {
+    unefois = false;
     overlay.style.display = "none";
 
     $(function () {
-        $("#pauseButton").text("Pause").data("paused", false).click(function () {
+        $("#pauseButton").data("paused", false).click(function () {
             $(this).data("paused", !$(this).data("paused"));
             if ($(this).data("paused")) {
-                $(this).text("Resume");
                 game.paused = true;
+                document.getElementById('pauseButton').innerHTML = '<i class="icon-play">';
             } else {
-                $(this).text("Pause");
                 game.paused = false;
+                document.getElementById('pauseButton').innerHTML = '<i class="icon-pause">';
             }
         })
     });
+    $(function () {
+        $("#volumeButton").data("mute", false).click(function () {
+            $(this).data("mute", !$(this).data("mute"));
+            if ($(this).data("mute")) {
+
+                document.getElementById('volumeButton').innerHTML = '<i class="icon-volume-off">';
+                console.log("mute on");
+            } else {
+
+                document.getElementById('volumeButton').innerHTML = '<i class="icon-volume">';
+                console.log("mute off");
+            }
+        })
+    });
+
 
 
     // PHAZER -- BEGIN
@@ -28,6 +54,7 @@ start_button.onclick = function () {
     var h_window = window.innerHeight,
         w_window = window.innerWidth;
 
+    //    var isOn = true;
 
     var game = new Phaser.Game(w_window, h_window, Phaser.AUTO, 'gameDiv');
 
@@ -74,31 +101,35 @@ start_button.onclick = function () {
         preload: function () {
 
             // PLAYER
-            this.game.load.spritesheet('dude', 'assets/hex_run.png', 69, 84);
+            this.game.load.spritesheet('dude', 'assets/hex_run.png', 69, 81);
 
             // SOL
             this.game.load.image('ground', 'assets/hex_ground.png');
 
+
             // OBSTACLES
-            this.game.load.image('rock', 'assets/hex_obs.png');
-            this.game.load.image('cube', 'assets/rock_mario.png');
+            this.game.load.image('rock', 'assets/hex_obs_1.png');
+            this.game.load.image('rock2', 'assets/hex_obs_2.png');
+            this.game.load.image('rock3', 'assets/hex_obs_3.png');
+            this.game.load.image('cube', 'assets/hex_bonus.png');
+            //            this.game.load.spritesheet('cube', 'assets/hex_bonus.png',23,20);
 
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
-            this.game.load.image('back', 'assets/hex_sky.png');
-            this.game.load.image('stars', 'assets/stars.png');
-            this.game.load.image('back_02', 'assets/m_three.png');
-            this.game.load.image('back_03', 'assets/m_two.png');
-            this.game.load.image('back_04', 'assets/m_one.png');
+            this.game.load.image('sky', 'assets/hex_sky.png');
+            this.game.load.image('m_1', 'assets/hex_m_1.png');
+            this.game.load.image('m_2', 'assets/hex_m_2.png');
+            this.game.load.image('m_3', 'assets/hex_m_3.png');
+            this.game.load.image('pp', 'assets/hex_premierPlan.png');
 
-            // SOUND
+            //SOUND
             this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
-            this.game.load.audio('ost', ['assets/Meije_OST_0.mp3']);
+            this.game.load.audio('ost', ['assets/meije_ost_part_A.mp3']);
+            this.game.load.audio('ostbonus', ['assets/meije_ost_part_B.mp3']);
+            this.game.load.audio('bonus', ['assets/meije_sound_bonus.mp3']);
 
-            //MENU
-            // this.game.load.image('menu1', 'assets/menu-1.png', 270, 50);
-            // this.game.load.image('menu2', 'assets/menu2.png', 270, 50);
-            // this.game.load.image('menu3', 'assets/menu3.png', 270, 50);
+            this.game.load.spritesheet('flag', 'assets/hex_flag.png', 104, 120);
+
 
             this.game.load.image('overlay', 'assets/overlay.png');
 
@@ -111,25 +142,28 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         create: function () {
+            this.game.add.plugin(Phaser.Plugin.Debug);
 
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-            this.game.stage.backgroundColor = "70cfff";
+            this.game.stage.backgroundColor = "b9c5be";
 
-            this.back = this.game.add.sprite(338, 220, 'back');
-            this.back.x = 0;
-            this.back.y = 0;
-            this.back.height = h_window;
-            this.back.width = w_window;
-            this.back.smoothed = false;
-
-            this.stars = this.game.add.tileSprite(0, 0, w_window, 376, 'stars');
-            this.back_02 = this.game.add.tileSprite(0, h_window - 376 - 90, w_window, 376, 'back_02');
-            this.back_03 = this.game.add.tileSprite(0, h_window - 376 - 90, w_window, 376, 'back_03');
-            this.back_04 = this.game.add.tileSprite(0, h_window - 376 - 90, w_window, 376, 'back_04');
+            this.sky = game.add.sprite(32, 32, 'sky');
+            this.sky.x = 0;
+            this.sky.y = 0;
+            this.sky.height = h_window;
+            this.sky.width = w_window;
+            this.sky.smoothed = false;
+            this.m_3 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_3');
+            this.m_2 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_2');
+            this.m_1 = this.game.add.tileSprite(0, h_window - 217 - 47, w_window, 376, 'm_1');
             this.vide = this.game.add.tileSprite(w_window, h_window - 139, 'vide');
-            this.ground = this.game.add.tileSprite(0, h_window - 90, w_window, 91, 'ground');
-            //this.vide = this.game.add.rectangle(0, h_window-50, w_window, 1);
+            this.ground = this.game.add.tileSprite(0, h_window - 47, w_window, 91, 'ground');
+
+            //FLAG
+            //            this.flag = this.game.add.sprite('flag');
+            //            this.flag.animations.add('anim', [0, 1, 2], 14, true);
+
 
             this.speed = 6.3;
             this.maxSpeed = 10;
@@ -139,29 +173,29 @@ start_button.onclick = function () {
             //PLATEFORMS
             platforms = game.add.group();
             platforms.enableBody = true;
-            var ground = platforms.create(w_window / 6, h_window - 90, 'vide');
+            var ground = platforms.create(w_window / 6, h_window - 47, 'vide');
             ground.body.immovable = true;
 
             //ROCKS
             this.rocks = game.add.group();
             this.rocks.enableBody = true;
-            this.rocks.createMultiple(50, 'rock');
+            this.rocks.createMultiple(1, 'rock');
 
             //CUBES BONUS
             this.bonuss = game.add.group();
             this.bonuss.enableBody = true;
-            this.bonuss.createMultiple(10, 'cube');
+            this.bonuss.createMultiple(100, 'cube');
 
             // var rdmTime = Math.max(Math.random()*1000 + easy, 1000);
             // console.log(rdmTime);
             // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
 
             //PLAYER
-            this.dude = this.game.add.sprite(w_window / 6, h_window - 84 - 90, 'dude');
+            this.dude = this.game.add.sprite(w_window / 6, h_window - 81 - 47, 'dude');
             game.physics.enable(this.dude, Phaser.Physics.ARCADE);
             this.dude.enableBody = true;
-            this.dude.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
-            this.dude.animations.add('space', [8, 9], 10, true);
+            this.dude.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 16, true);
+            this.dude.animations.add('space', [10, 11], 10, true);
 
             //KEYS
             this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -174,13 +208,24 @@ start_button.onclick = function () {
 
             //MUSIC
             this.die = game.add.audio('die');
+
             this.music = this.game.add.audio('ost', true);
             this.music.loop = true;
             this.music.play();
 
+            this.musicBonus = this.game.add.audio('ostbonus', true);
+            this.musicBonus.loop = true;
+this.musicBonus.play();
+
+            this.bruitBonus = this.game.add.audio('bonus', true);
+
+
+
+            this.pp = this.game.add.tileSprite(0, h_window - 130, w_window, 130, 'pp');
+
         },
 
-        
+
 
         ///////////////////////////////////////////////
         //
@@ -189,7 +234,18 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         update: function () {
+            //            console.log(parseInt(this.music.durationMS));
 
+            //            console.log(this.music.currentTime);
+            if ((parseInt(this.music.durationMS) == this.music.currentTime) && this.music.durationMS != 0) {
+                console.log("goMusicBonus");
+            }
+            //            var delay = Timer(game, autoDestroy)
+            //             console.log(delay);
+            //            for (var i = 0; i <= delay; i = i + 0.000000000000001) {
+            //                this.musicBonus.play();
+            //
+            //            }
             game.physics.arcade.collide(this.dude, platforms);
 
             if (localStorage.getItem("highscore")) {
@@ -200,8 +256,12 @@ start_button.onclick = function () {
             // console.log(rdmTime);
             // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
 
+
+
+            var rand = game.rnd.integerInRange(1, 3);
+            //            console.log(rand);
             var dif = Math.random();
-            var dif2 = Math.random()*10;
+            var dif2 = Math.random() * 10;
             easy = 0.989;
             //var dif2 = Math.random(0,2);
             //console.log(dif2);
@@ -210,6 +270,15 @@ start_button.onclick = function () {
             if (dif > easy) {
                 this.addRowOfrocks();
                 //console.log('condition : ' + dif + ' > ' + easy)
+
+                if (rand == 1) {
+                    this.rocks.createMultiple(1, 'rock2');
+                } else if (rand == 2) {
+                    this.rocks.createMultiple(1, 'rock');
+                } else {
+                    this.rocks.createMultiple(1, 'rock3');
+
+                }
             }
 
             if (total > 100) {
@@ -221,13 +290,11 @@ start_button.onclick = function () {
             if (this.speed < this.maxSpeed)
                 this.speed += 0.0015;
 
-
-
             this.ground.tilePosition.x -= this.speed;
-            this.stars.tilePosition.x -= 0.1 * (this.speed/10);
-            this.back_02.tilePosition.x -= 0.2 * (this.speed/10);
-            this.back_03.tilePosition.x -= 0.3 * (this.speed/10);
-            this.back_04.tilePosition.x -= 0.4 * (this.speed/10);
+            this.m_3.tilePosition.x -= 0.2 * (this.speed / 10);
+            this.m_2.tilePosition.x -= 0.3 * (this.speed / 10);
+            this.m_1.tilePosition.x -= 0.4 * (this.speed / 10);
+            this.pp.tilePosition.x -= this.speed * 1.5;
             for (var i in this.rocks.children) {
                 this.rocks.children[i].body.x -= this.speed;
             };
@@ -278,19 +345,27 @@ start_button.onclick = function () {
             if (this.dude.inWorld === false) {
                 this.restartGame();
             }
-            
-            
 
-            if (bonus>0) {
+
+            if (bonus > 0) {
+
                 //this.back_bonus.alpha = 1;
-                this.back.tint = 0xb5ff70;
+                //this.back.tint = 0xb5ff70;
                 bonus -= 0.02;
                 game.debug.text('INVISIBLE MODE : ' + parseInt(bonus), 32, 62 * 1.5);
+
+                this.dude.alpha = 0.5;
+
             } else {
-                this.back.tint = 0x70cfff;
-                this.collides(this.rocks, this.dude);
-            };
-            
+                //this.back.tint = 0x70cfff;
+                //                this.collides(this.rocks, this.dude);
+                this.dude.alpha = 1;
+                this.music.volume = 1;
+                this.musicBonus.volume = 0;
+            }
+
+
+
             this.collidesBonus(this.bonuss, this.dude);
 
             // SCORE
@@ -300,10 +375,9 @@ start_button.onclick = function () {
 
 
         },
-
         ///////////////////////////////////////////////
         //
-        //          ADD ROCK FONCTION
+        //          ADD OBSTACLES + BONUS
         //
         ///////////////////////////////////////////////
 
@@ -326,24 +400,23 @@ start_button.onclick = function () {
             //this.rocks.push(rock);
         },
         addRowOfrocks: function () {
-            this.addOnerock(w_window, h_window - 57 - 90);
+            this.addOnerock(w_window, h_window - 50 - 47);
         },
-
         addOneBonus: function (x, y) {
             // Get the first dead rock of our group
-            var cube = this.bonuss.getFirstDead();
+            this.cube = this.bonuss.getFirstDead();
 
             // Set the new position of the rock
-            cube.reset(x, y);
+            this.cube.reset(x, y);
 
             // Add velocity to the rock to make it move left
             //rock.body.velocity.x = 0;
             //rock.body.velocity.y = 0;
 
             // Kill the rock when it's no longer visible
-            cube.checkWorldBounds = true;
-            cube.outOfBoundsKill = true;
-            cube.body.immovable = true;
+            this.cube.checkWorldBounds = true;
+            this.cube.outOfBoundsKill = true;
+            this.cube.body.immovable = true;
 
             //this.rocks.push(rock);
         },
@@ -367,7 +440,14 @@ start_button.onclick = function () {
             total = 0;
             localStorage.setItem("highscore", highscore);
             this.music.stop();
+            this.musicBonus.stop();
         },
+
+        ///////////////////////////////////////////////
+        //
+        //          COLLIDE FONCTION
+        //
+        ///////////////////////////////////////////////
 
         collides: function (a, b) {
             var collision = game.physics.arcade.collide(a, b);
@@ -375,11 +455,20 @@ start_button.onclick = function () {
                 this.restartGame();
             }
         },
-
         collidesBonus: function (a, b) {
             var collision = game.physics.arcade.overlap(a, b);
             if (collision) {
-                bonus += 0.5;
+                var isCollide = true;
+                if (isCollide) {
+
+                    this.bruitBonus.play();
+                    this.bruitBonus.volume = 0.8;
+                    this.music.volume = 0;
+                    this.musicBonus.volume = 1;
+                    bonus = 10;
+                    isCollide = false;
+                    this.cube.destroy();
+                }
             }
         }
 
