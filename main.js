@@ -10,7 +10,7 @@ document.onkeydown = function (event) {
         start_button.onclick();
     }
 
-}
+};
 
 start_button.onclick = function () {
     unefois = false;
@@ -26,7 +26,7 @@ start_button.onclick = function () {
                 game.paused = false;
                 document.getElementById('pauseButton').innerHTML = '<i class="icon-pause">';
             }
-        })
+        });
     });
     $(function () {
         $("#volumeButton").data("mute", false).click(function () {
@@ -34,13 +34,11 @@ start_button.onclick = function () {
             if ($(this).data("mute")) {
 
                 document.getElementById('volumeButton').innerHTML = '<i class="icon-volume-off">';
-                console.log("mute on");
             } else {
 
                 document.getElementById('volumeButton').innerHTML = '<i class="icon-volume">';
-                console.log("mute off");
             }
-        })
+        });
     });
 
 
@@ -48,8 +46,8 @@ start_button.onclick = function () {
     // PHAZER -- BEGIN
     // main.js
 
-    var easy = 1;
-    var bonus = 0;
+    var easy = 1,
+        bonus = 0;
 
     var h_window = window.innerHeight,
         w_window = window.innerWidth;
@@ -73,8 +71,8 @@ start_button.onclick = function () {
 
     var display = {
         resizer: function () {
-            var myheight = $(window).innerHeight();
-            var mywidth = $(window).innerWidth();
+            var myheight = $(window).innerHeight(),
+                mywidth = $(window).innerWidth();
             try {
                 game.width = Number(mywidth);
                 game.height = Number(myheight);
@@ -106,7 +104,6 @@ start_button.onclick = function () {
             // SOL
             this.game.load.image('ground', 'assets/hex_ground.png');
 
-
             // OBSTACLES
             this.game.load.image('rock', 'assets/hex_obs_1.png');
             this.game.load.image('rock2', 'assets/hex_obs_2.png');
@@ -117,6 +114,7 @@ start_button.onclick = function () {
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
             this.game.load.image('sky', 'assets/hex_sky.png');
+            this.game.load.image('sun', 'assets/hex_sun.png');
             this.game.load.image('m_1', 'assets/hex_m_1.png');
             this.game.load.image('m_2', 'assets/hex_m_2.png');
             this.game.load.image('m_3', 'assets/hex_m_3.png');
@@ -130,7 +128,6 @@ start_button.onclick = function () {
 
             this.game.load.spritesheet('flag', 'assets/hex_flag.png', 104, 120);
 
-
             this.game.load.image('overlay', 'assets/overlay.png');
 
         },
@@ -142,18 +139,19 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         create: function () {
-            this.game.add.plugin(Phaser.Plugin.Debug);
+            //            this.game.add.plugin(Phaser.Plugin.Debug);
 
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
             this.game.stage.backgroundColor = "b9c5be";
-
-            this.sky = game.add.sprite(32, 32, 'sky');
+            this.sky = this.game.add.tileSprite(0, 0, 1272, 367, 'sky');
+            //            this.sky = game.add.sprite(1252, 367, 'sky');
             this.sky.x = 0;
-            this.sky.y = 0;
-            this.sky.height = h_window;
-            this.sky.width = w_window;
-            this.sky.smoothed = false;
+            this.sky.y = h_window - 367 - 47;
+            //            this.sky.height = 367;
+            //            this.sky.width = 1252;
+            //            this.sky.smoothed = false;
+            this.sun = this.game.add.sprite(153, 154, 'sun');
             this.m_3 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_3');
             this.m_2 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_2');
             this.m_1 = this.game.add.tileSprite(0, h_window - 217 - 47, w_window, 376, 'm_1');
@@ -215,11 +213,9 @@ start_button.onclick = function () {
 
             this.musicBonus = this.game.add.audio('ostbonus', true);
             this.musicBonus.loop = true;
-this.musicBonus.play();
+            this.musicBonus.play();
 
             this.bruitBonus = this.game.add.audio('bonus', true);
-
-
 
             this.pp = this.game.add.tileSprite(0, h_window - 130, w_window, 130, 'pp');
 
@@ -234,11 +230,20 @@ this.musicBonus.play();
         ///////////////////////////////////////////////
 
         update: function () {
-            //            console.log(parseInt(this.music.durationMS));
 
-            //            console.log(this.music.currentTime);
-            if ((parseInt(this.music.durationMS) == this.music.currentTime) && this.music.durationMS != 0) {
+//            console.log(parseInt(this.music.durationMS));
+//            console.log(this.music.currentTime);
+//            console.log(this.music.currentTime);
+//            console.log(parseInt(this.music.durationMS));
+
+
+            if ((parseInt(this.music.durationMS) == this.music.currentTime) && this.music.currentTime != 0) {
                 console.log("goMusicBonus");
+                this.musicBonus.position = 0;
+                
+            console.log(this.music.currentTime);
+            console.log(parseInt(this.music.durationMS));
+
             }
             //            var delay = Timer(game, autoDestroy)
             //             console.log(delay);
@@ -284,12 +289,15 @@ this.musicBonus.play();
             if (total > 100) {
                 if (dif2 < 0.01) {
                     this.addRowOfBonuss();
-                };
+                }
             }
 
-            if (this.speed < this.maxSpeed)
-                this.speed += 0.0015;
+            if (this.speed < this.maxSpeed) {
 
+                this.speed += 0.0015;
+            }
+
+            this.sky.tilePosition.x -= 0.1 * (this.speed / 10);
             this.ground.tilePosition.x -= this.speed;
             this.m_3.tilePosition.x -= 0.2 * (this.speed / 10);
             this.m_2.tilePosition.x -= 0.3 * (this.speed / 10);
@@ -349,15 +357,23 @@ this.musicBonus.play();
 
             if (bonus > 0) {
 
-                //this.back_bonus.alpha = 1;
-                //this.back.tint = 0xb5ff70;
                 bonus -= 0.02;
                 game.debug.text('INVISIBLE MODE : ' + parseInt(bonus), 32, 62 * 1.5);
 
                 this.dude.alpha = 0.5;
+                this.dude.alpha = 0.5;
+
+                this.game.stage.backgroundColor = "a2b6a9";
+
+                this.sky.tint = 0xdeece4;
+
 
             } else {
-                //this.back.tint = 0x70cfff;
+
+                this.game.stage.backgroundColor = "b9c5be";
+
+                this.sky.tint = 0xFFFFFF;
+
                 //                this.collides(this.rocks, this.dude);
                 this.dude.alpha = 1;
                 this.music.volume = 1;
