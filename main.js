@@ -1,3 +1,10 @@
+// add description menu and tuto
+// accélerer plus vite ?
+// plus dur ?
+// node-webkit + cordova
+
+
+
 var overlay = document.getElementById('overlay'),
     start_button = overlay.firstElementChild;
 
@@ -10,7 +17,7 @@ document.onkeydown = function (event) {
         start_button.onclick();
     }
 
-};
+}
 
 start_button.onclick = function () {
     unefois = false;
@@ -26,19 +33,7 @@ start_button.onclick = function () {
                 game.paused = false;
                 document.getElementById('pauseButton').innerHTML = '<i class="icon-pause">';
             }
-        });
-    });
-    $(function () {
-        $("#volumeButton").data("mute", false).click(function () {
-            $(this).data("mute", !$(this).data("mute"));
-            if ($(this).data("mute")) {
-
-                document.getElementById('volumeButton').innerHTML = '<i class="icon-volume-off">';
-            } else {
-
-                document.getElementById('volumeButton').innerHTML = '<i class="icon-volume">';
-            }
-        });
+        })
     });
 
 
@@ -46,8 +41,8 @@ start_button.onclick = function () {
     // PHAZER -- BEGIN
     // main.js
 
-    var easy = 1,
-        bonus = 0;
+    var easy = 1;
+    var bonus = 0;
 
     var h_window = window.innerHeight,
         w_window = window.innerWidth;
@@ -71,8 +66,8 @@ start_button.onclick = function () {
 
     var display = {
         resizer: function () {
-            var myheight = $(window).innerHeight(),
-                mywidth = $(window).innerWidth();
+            var myheight = $(window).innerHeight();
+            var mywidth = $(window).innerWidth();
             try {
                 game.width = Number(mywidth);
                 game.height = Number(myheight);
@@ -104,6 +99,7 @@ start_button.onclick = function () {
             // SOL
             this.game.load.image('ground', 'assets/hex_ground.png');
 
+
             // OBSTACLES
             this.game.load.image('rock', 'assets/hex_obs_1.png');
             this.game.load.image('rock2', 'assets/hex_obs_2.png');
@@ -114,7 +110,6 @@ start_button.onclick = function () {
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
             this.game.load.image('sky', 'assets/hex_sky.png');
-            this.game.load.image('sun', 'assets/hex_sun.png');
             this.game.load.image('m_1', 'assets/hex_m_1.png');
             this.game.load.image('m_2', 'assets/hex_m_2.png');
             this.game.load.image('m_3', 'assets/hex_m_3.png');
@@ -126,7 +121,10 @@ start_button.onclick = function () {
             this.game.load.audio('ostbonus', ['assets/meije_ost_part_B.mp3']);
             this.game.load.audio('bonus', ['assets/meije_sound_bonus.mp3']);
 
+            this.game.load.image('sound_button', 'Mouton_du_tonerre/tronc.png')
+
             this.game.load.spritesheet('flag', 'assets/hex_flag.png', 104, 120);
+
 
             this.game.load.image('overlay', 'assets/overlay.png');
 
@@ -139,19 +137,18 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         create: function () {
-            //            this.game.add.plugin(Phaser.Plugin.Debug);
+            this.game.add.plugin(Phaser.Plugin.Debug);
 
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
             this.game.stage.backgroundColor = "b9c5be";
-            this.sky = this.game.add.tileSprite(0, 0, 1272, 367, 'sky');
-            //            this.sky = game.add.sprite(1252, 367, 'sky');
+
+            this.sky = game.add.sprite(32, 32, 'sky');
             this.sky.x = 0;
-            this.sky.y = h_window - 367 - 47;
-            //            this.sky.height = 367;
-            //            this.sky.width = 1252;
-            //            this.sky.smoothed = false;
-            this.sun = this.game.add.sprite(153, 154, 'sun');
+            this.sky.y = 0;
+            this.sky.height = h_window;
+            this.sky.width = w_window;
+            this.sky.smoothed = false;
             this.m_3 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_3');
             this.m_2 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_2');
             this.m_1 = this.game.add.tileSprite(0, h_window - 217 - 47, w_window, 376, 'm_1');
@@ -182,7 +179,65 @@ start_button.onclick = function () {
             //CUBES BONUS
             this.bonuss = game.add.group();
             this.bonuss.enableBody = true;
-            this.bonuss.createMultiple(100, 'cube');
+            this.bonuss.createMultiple(10, 'cube');
+
+
+            // BUTTONS
+            this.soundButton = this.game.add.sprite(w_window-130, 30, 'sound_button');
+            this.soundButton.inputEnabled = true;
+
+            localStorage.setItem("soundVolume", this.sound.volume);
+            soundVolume = localStorage.getItem("soundVolume");
+            soundVolume = this.sound.volume;
+
+            this.soundButton.events.onInputDown.add(soundButton, this);
+            function soundButton(){
+                if (this.sound.volume==0){
+                    soundVolume=this.sound.volume=1;
+                    console.log('soundVolume : ' + soundVolume);
+                } 
+                else{
+                    soundVolume=this.sound.volume=0;
+                }
+            }
+            // function soundKey(){
+            //     if (key_code == 86) {
+            //         console.log('yo');
+            //         if (this.sound.volume==0){
+            //             soundVolume=this.sound.volume=1;
+            //             console.log('soundVolume : ' + soundVolume);
+            //         } 
+            //         else{
+            //             soundVolume=this.sound.volume=0;
+            //         }
+            //     }
+            // }
+
+            document.onkeydown = function (event) {
+                var key_press = String.fromCharCode(event.keyCode);
+                var key_code = event.keyCode;
+            
+                if (key_code == 80) {
+                    if (game.paused) {
+                        game.paused=false;
+                    } else {
+                        game.paused=true;
+                    };
+                }
+            
+            }
+
+            // this.pauseButton = this.game.add.sprite(w_window-50, 20, 'flag');
+            // this.pauseButton.inputEnabled = true;
+            // this.pauseButton.events.onInputDown.add(pauseGame, this);
+            // function pauseGame(){
+            //     if (game.isPaused) {
+            //         game.paused = false;
+            //     }
+            //     if (game.isPaused==false){
+            //         game.paused = true;
+            //     }
+            // }
 
             // var rdmTime = Math.max(Math.random()*1000 + easy, 1000);
             // console.log(rdmTime);
@@ -198,8 +253,12 @@ start_button.onclick = function () {
             //KEYS
             this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
+            this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
             this.escapeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
             this.mouseDown = this.game.input.mousePointer;
+            this.volumeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.V);
+
+
 
             //DOUBLE SAUT
             this.compteNbSaut = 0;
@@ -217,7 +276,15 @@ start_button.onclick = function () {
 
             this.bruitBonus = this.game.add.audio('bonus', true);
 
+
+
             this.pp = this.game.add.tileSprite(0, h_window - 130, w_window, 130, 'pp');
+
+            $("#volumeButton").click(function(){
+                console.log(Phaser.SoundManager);
+                Phaser.SoundManager.volume=0;
+                
+            })
 
         },
 
@@ -230,20 +297,11 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         update: function () {
+            //            console.log(parseInt(this.music.durationMS));
 
-//            console.log(parseInt(this.music.durationMS));
-//            console.log(this.music.currentTime);
-//            console.log(this.music.currentTime);
-//            console.log(parseInt(this.music.durationMS));
-
-
-            if ((parseInt(this.music.durationMS) == this.music.currentTime) && this.music.currentTime != 0) {
+            //            console.log(this.music.currentTime);
+            if ((parseInt(this.music.durationMS) == this.music.currentTime) && this.music.durationMS != 0) {
                 console.log("goMusicBonus");
-                this.musicBonus.position = 0;
-                
-            console.log(this.music.currentTime);
-            console.log(parseInt(this.music.durationMS));
-
             }
             //            var delay = Timer(game, autoDestroy)
             //             console.log(delay);
@@ -289,15 +347,12 @@ start_button.onclick = function () {
             if (total > 100) {
                 if (dif2 < 0.01) {
                     this.addRowOfBonuss();
-                }
+                };
             }
 
-            if (this.speed < this.maxSpeed) {
-
+            if (this.speed < this.maxSpeed)
                 this.speed += 0.0015;
-            }
 
-            this.sky.tilePosition.x -= 0.1 * (this.speed / 10);
             this.ground.tilePosition.x -= this.speed;
             this.m_3.tilePosition.x -= 0.2 * (this.speed / 10);
             this.m_2.tilePosition.x -= 0.3 * (this.speed / 10);
@@ -311,9 +366,18 @@ start_button.onclick = function () {
             };
 
 
+            if (this.volumeKey.isDown) {
+                if (this.sound.volume==0){
+                    soundVolume=this.sound.volume=1;
+                    console.log('soundVolume : ' + soundVolume);
+                } 
+                else{
+                    soundVolume=this.sound.volume=0;
+                }
+                this.stop;
+            };
 
             // Double saut
-
             if (this.compteNbSaut < 2) {
                 if (this.spaceKey.isDown || this.upKey.isDown) {
                     if (this.spaceKey.downDuration(5) || this.upKey.downDuration(5)) {
@@ -325,23 +389,20 @@ start_button.onclick = function () {
                 }
 
             }
-            /*if (this.mouseDown.isDown) {
-                this.compteNbSaut = this.compteNbSaut + 1;
-                game.physics.arcade.enable(this.dude);
-                this.dude.body.gravity.y = 1600;
-                this.dude.body.velocity.y = -600;
-            }*/
 
-            game.input.onDown.add(function () {
-                if (this.compteNbSaut < 2) {
-                    this.compteNbSaut = this.compteNbSaut + 1;
-                    game.physics.arcade.enable(this.dude);
-                    this.dude.body.gravity.y = 2000;
-                    this.dude.body.velocity.y = -800;
-                    this.stop();
-                    console.log(this.compteNbSaut);
+            game.input.onDown.add(zoneClick, this);
+            function zoneClick(pointer){
+                if (pointer.y > 100){
+                        if (this.compteNbSaut < 2) {
+                        this.compteNbSaut = this.compteNbSaut + 1;
+                        game.physics.arcade.enable(this.dude);
+                        this.dude.body.gravity.y = 2000;
+                        this.dude.body.velocity.y = -800;
+                        this.stop();
+                        console.log(this.compteNbSaut);
+                    }
                 }
-            }, this);
+            }
 
 
             if (this.dude.body.velocity.y !== 0) {
@@ -357,24 +418,16 @@ start_button.onclick = function () {
 
             if (bonus > 0) {
 
+                //this.back_bonus.alpha = 1;
+                //this.back.tint = 0xb5ff70;
                 bonus -= 0.02;
                 game.debug.text('INVISIBLE MODE : ' + parseInt(bonus), 32, 62 * 1.5);
 
                 this.dude.alpha = 0.5;
-                this.dude.alpha = 0.5;
-
-                this.game.stage.backgroundColor = "a2b6a9";
-
-                this.sky.tint = 0xdeece4;
-
 
             } else {
-
-                this.game.stage.backgroundColor = "b9c5be";
-
-                this.sky.tint = 0xFFFFFF;
-
-                //                this.collides(this.rocks, this.dude);
+                //this.back.tint = 0x70cfff;
+                this.collides(this.rocks, this.dude);
                 this.dude.alpha = 1;
                 this.music.volume = 1;
                 this.musicBonus.volume = 0;
@@ -457,6 +510,7 @@ start_button.onclick = function () {
             localStorage.setItem("highscore", highscore);
             this.music.stop();
             this.musicBonus.stop();
+            this.sound.volume = soundVolume;
         },
 
         ///////////////////////////////////////////////
