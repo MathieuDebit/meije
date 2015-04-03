@@ -305,20 +305,20 @@ start_button.onclick = function () {
 
             this.pp = this.game.add.tileSprite(0, h_window - 130, w_window, 130, 'pp');
 
-            this.text_score = game.add.text(20, 13, "Score", {
-                font: "20px Helvetica",
+            this.text_score = game.add.text(20, 15, "Score", {
+                font: "16px Helvetica",
                 fill: "#ffffff",
-                align: "left"
+                align: "left",
             });
-            this.text_highscore = game.add.text(150, 13, "Highscore", {
-                font: "20px Helvetica",
+            this.text_highscore = game.add.text(150, 15, "Highscore", {
+                font: "16px Helvetica",
                 fill: "#ffffff",
-                align: "left"
+                align: "left",
             });
-            this.text_bonus = game.add.text(w_window/2, 13, "", {
-                font: "20px Helvetica",
+            this.text_bonus = game.add.text(w_window/2, 15, "", {
+                font: "16px Helvetica",
                 fill: "#ffffff",
-                align: "center"
+                align: "center",
             });
 
         },
@@ -504,6 +504,8 @@ start_button.onclick = function () {
             total += 0.1;
             this.text_score.setText("Score : " + parseInt(total));
             this.text_highscore.setText("Highscore : " + parseInt(highscore));
+    
+            
 
 
 
