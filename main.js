@@ -124,6 +124,7 @@ start_button.onclick = function () {
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
             this.game.load.image('sky', 'assets/hex_sky.png');
+            this.game.load.image('sun', 'assets/hex_sun.png');
             this.game.load.image('sky_cloud', 'assets/hex_sky_cloud.png');
 
             this.game.load.image('m_1', 'assets/hex_m_1.png');
@@ -184,8 +185,12 @@ start_button.onclick = function () {
             this.sky.height = h_window;
             this.sky.width = w_window;
             this.sky.smoothed = false;
+            
+            this.sun = this.game.add.tileSprite(230, 175 , 153, 153, 'sun');
+          
+            
             this.m_3 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_3');
-            this.sky_cloud = this.game.add.tileSprite(0, 250, 1252, 367, 'sky_cloud');
+            this.sky_cloud = this.game.add.tileSprite(0, 150, 1252, 367, 'sky_cloud');
 
             this.m_2 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_2');
             this.m_1 = this.game.add.tileSprite(0, h_window - 217 - 47, w_window, 376, 'm_1');
@@ -475,7 +480,7 @@ start_button.onclick = function () {
                 //this.back.tint = 0xb5ff70;
                 bonus -= 0.02;
 
-                this.text_bonus.setText("MODE INVICIBLE : " + parseInt(bonus));
+                this.text_bonus.setText("MODE INVICINBLE : " + parseInt(bonus));
 
                 //                game.debug.text('INVISIBLE MODE : ' + parseInt(bonus), 32, 62 * 1.5);
 
