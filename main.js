@@ -492,6 +492,7 @@ start_button.onclick = function () {
                 this.collidesThrees(this.threes, this.dude);
                 this.collidesFires(this.flags, this.dude);
                 this.dude.alpha = 1;
+                this.sky_night.alpha=0;
                 this.music.volume = 1;
                 this.musicBonus.volume = 0;
             }
