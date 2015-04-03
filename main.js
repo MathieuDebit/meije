@@ -125,6 +125,8 @@ start_button.onclick = function () {
             this.game.load.image('vide', 'assets/empty.png');
             this.game.load.image('sky', 'assets/hex_sky.png');
             this.game.load.image('sun', 'assets/hex_sun.png');
+            this.game.load.image('sky_night', 'assets/hex_night.png');
+            this.game.load.image('moon', 'assets/hex_moon.png');
             this.game.load.image('sky_cloud', 'assets/hex_sky_cloud.png');
 
             this.game.load.image('m_1', 'assets/hex_m_1.png');
@@ -187,8 +189,16 @@ start_button.onclick = function () {
             this.sky.smoothed = false;
             
             this.sun = this.game.add.tileSprite(230, 175 , 153, 153, 'sun');
-          
-            
+
+
+            this.sky_night = game.add.sprite(32, 32, 'sky_night');
+            this.sky_night.x = 0;
+            this.sky_night.y = 0;
+            this.sky_night.height = h_window;
+            this.sky_night.width = w_window;
+            this.sky_night.smoothed = false;
+            this.sky_night.alpha=0;
+
             this.m_3 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_3');
             this.sky_cloud = this.game.add.tileSprite(0, 150, 1252, 367, 'sky_cloud');
 
@@ -340,6 +350,7 @@ start_button.onclick = function () {
         update: function () {
 
             game.physics.arcade.collide(this.dude, platforms);
+
             if ((!this.synchMusic) && (this.music.currentTime == 0) && (total > 5)) {
                 this.musicBonus.play();
                 console.log(this.music.currentTime);
@@ -360,7 +371,7 @@ start_button.onclick = function () {
             var dif_b = Math.random();
             var dif_c = Math.random();
             var dif2 = Math.random() * 10;
-            easy = 0.991;
+            easy = 0.992;
 
 
             if (dif > easy) {
@@ -374,11 +385,11 @@ start_button.onclick = function () {
                 }
             }
 
-            if (dif_b > easy + 0.008) {
+            if (dif_b > easy + 0.009) {
                 this.addRowOfThrees();
             }
 
-            if (dif_c > easy + 0.008) {
+            if (dif_c > easy + 0.007) {
                 this.addRowOfFlags();
             }
 
@@ -387,18 +398,6 @@ start_button.onclick = function () {
                     this.addRowOfBonuss();
                 };
             }
-
-
-            // // if (total > 100) {
-            //     if (total<100.00000000001 && total>99.99999999999) {
-            //         // if (total%100==0) {
-            //         //     console.log('total%100');
-            //         // };
-
-            //         this.addRowOfFlags();
-            //         this.stop;
-            //     };
-            // // };
 
 
             if (this.speed < this.maxSpeed)
@@ -476,7 +475,8 @@ start_button.onclick = function () {
 
             if (bonus > 0) {
 
-                //this.back_bonus.alpha = 1;
+                this.sky_night.alpha = 1;
+                // game.add.tween('sky_night').to({alpha: 1});
                 //this.back.tint = 0xb5ff70;
                 bonus -= 0.02;
 
@@ -488,16 +488,15 @@ start_button.onclick = function () {
 
             } else {
                 //this.back.tint = 0x70cfff;
-                this.collides(this.rocks, this.dude);
-                this.collidesBonus(this.bonuss, this.dude);
-                this.collidesThrees(this.threes, this.dude);
-                this.collidesFires(this.flags, this.dude);
+                // this.collides(this.rocks, this.dude);
+                // this.collidesThrees(this.threes, this.dude);
+                // this.collidesFires(this.flags, this.dude);
                 this.dude.alpha = 1;
                 this.music.volume = 1;
                 this.musicBonus.volume = 0;
             }
 
-
+            this.collidesBonus(this.bonuss, this.dude);
 
 
             // SCORE
