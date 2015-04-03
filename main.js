@@ -1,6 +1,5 @@
+// drapeau tous les 100 pts
 // add description menu and tuto
-// accélerer plus vite ?
-// plus dur ?
 // node-webkit + cordova
 
 
@@ -28,13 +27,42 @@ start_button.onclick = function () {
             $(this).data("paused", !$(this).data("paused"));
             if ($(this).data("paused")) {
                 game.paused = true;
-                document.getElementById('pauseButton').innerHTML = '<i class="icon-play">';
+                $(this).css('background-position', '154px');
             } else {
                 game.paused = false;
-                document.getElementById('pauseButton').innerHTML = '<i class="icon-pause">';
+                $(this).css('background-position', 'right');
             }
         })
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -83,6 +111,29 @@ start_button.onclick = function () {
         }
     };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     var mainState = {
 
         ///////////////////////////////////////////////
@@ -104,8 +155,9 @@ start_button.onclick = function () {
             this.game.load.image('rock', 'assets/hex_obs_1.png');
             this.game.load.image('rock2', 'assets/hex_obs_2.png');
             this.game.load.image('rock3', 'assets/hex_obs_3.png');
+            this.game.load.image('three', 'assets/hex_obs_4.png');
             this.game.load.image('cube', 'assets/hex_bonus.png');
-            //            this.game.load.spritesheet('cube', 'assets/hex_bonus.png',23,20);
+            this.game.load.spritesheet('cube', 'assets/hex_bonus.png',23,20);
 
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
@@ -115,20 +167,47 @@ start_button.onclick = function () {
             this.game.load.image('m_3', 'assets/hex_m_3.png');
             this.game.load.image('pp', 'assets/hex_premierPlan.png');
 
+            // BUTTONS
+            this.game.load.spritesheet('buttons', 'assets/hex_buttons.png',77, 50 );
+
             //SOUND
             this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
             this.game.load.audio('ost', ['assets/meije_ost_part_A.mp3']);
             this.game.load.audio('ostbonus', ['assets/meije_ost_part_B.mp3']);
             this.game.load.audio('bonus', ['assets/meije_sound_bonus.mp3']);
 
-            this.game.load.image('sound_button', 'Mouton_du_tonerre/tronc.png')
+            this.game.load.image('sound_button', 'Mouton_du_tonerre/mouton32.png')
 
-            this.game.load.spritesheet('flag', 'assets/hex_flag.png', 104, 120);
+            this.game.load.spritesheet('flag', 'assets/fire.png', 104, 130);
 
 
             this.game.load.image('overlay', 'assets/overlay.png');
 
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         ///////////////////////////////////////////////
         //
@@ -137,12 +216,16 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         create: function () {
-            this.game.add.plugin(Phaser.Plugin.Debug);
 
+            this.game.add.plugin(Phaser.Plugin.Debug);
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            this.speed = 6.3;
+            this.maxSpeed = 10;
 
             this.game.stage.backgroundColor = "b9c5be";
 
+            // BACKGROUND
             this.sky = game.add.sprite(32, 32, 'sky');
             this.sky.x = 0;
             this.sky.y = 0;
@@ -155,16 +238,6 @@ start_button.onclick = function () {
             this.vide = this.game.add.tileSprite(w_window, h_window - 139, 'vide');
             this.ground = this.game.add.tileSprite(0, h_window - 47, w_window, 91, 'ground');
 
-            //FLAG
-            //            this.flag = this.game.add.sprite('flag');
-            //            this.flag.animations.add('anim', [0, 1, 2], 14, true);
-
-
-            this.speed = 6.3;
-            this.maxSpeed = 10;
-
-            //this.back_bonus.alpha = 0;
-
             //PLATEFORMS
             platforms = game.add.group();
             platforms.enableBody = true;
@@ -176,15 +249,26 @@ start_button.onclick = function () {
             this.rocks.enableBody = true;
             this.rocks.createMultiple(1, 'rock');
 
+            //THREES
+            this.threes = game.add.group();
+            this.threes.enableBody = true;
+            this.threes.createMultiple(10, 'three');
+
             //CUBES BONUS
             this.bonuss = game.add.group();
             this.bonuss.enableBody = true;
             this.bonuss.createMultiple(10, 'cube');
 
-
-            // BUTTONS
-            this.soundButton = this.game.add.sprite(w_window-130, 30, 'sound_button');
+            // BUTTONS VOLUME
+            this.soundButton = this.game.add.sprite(w_window-200, 30, 'buttons');
+            this.soundButton.animations.add('volumeOn', [1]);
+            this.soundButton.animations.add('volumeOff', [0]);
             this.soundButton.inputEnabled = true;
+            if (this.sound.volume==0){
+                this.soundButton.play('volumeOff');
+            } else{
+                this.soundButton.play('volumeOn');
+            }
 
             localStorage.setItem("soundVolume", this.sound.volume);
             soundVolume = localStorage.getItem("soundVolume");
@@ -194,24 +278,13 @@ start_button.onclick = function () {
             function soundButton(){
                 if (this.sound.volume==0){
                     soundVolume=this.sound.volume=1;
-                    console.log('soundVolume : ' + soundVolume);
+                    this.soundButton.play('volumeOn');
                 } 
                 else{
                     soundVolume=this.sound.volume=0;
+                    this.soundButton.play('volumeOff');
                 }
             }
-            // function soundKey(){
-            //     if (key_code == 86) {
-            //         console.log('yo');
-            //         if (this.sound.volume==0){
-            //             soundVolume=this.sound.volume=1;
-            //             console.log('soundVolume : ' + soundVolume);
-            //         } 
-            //         else{
-            //             soundVolume=this.sound.volume=0;
-            //         }
-            //     }
-            // }
 
             document.onkeydown = function (event) {
                 var key_press = String.fromCharCode(event.keyCode);
@@ -227,28 +300,14 @@ start_button.onclick = function () {
             
             }
 
-            // this.pauseButton = this.game.add.sprite(w_window-50, 20, 'flag');
-            // this.pauseButton.inputEnabled = true;
-            // this.pauseButton.events.onInputDown.add(pauseGame, this);
-            // function pauseGame(){
-            //     if (game.isPaused) {
-            //         game.paused = false;
-            //     }
-            //     if (game.isPaused==false){
-            //         game.paused = true;
-            //     }
-            // }
-
-            // var rdmTime = Math.max(Math.random()*1000 + easy, 1000);
-            // console.log(rdmTime);
-            // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
-
             //PLAYER
             this.dude = this.game.add.sprite(w_window / 6, h_window - 81 - 47, 'dude');
             game.physics.enable(this.dude, Phaser.Physics.ARCADE);
             this.dude.enableBody = true;
             this.dude.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 16, true);
             this.dude.animations.add('space', [10, 11], 10, true);
+
+            
 
             //KEYS
             this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -276,17 +335,40 @@ start_button.onclick = function () {
 
             this.bruitBonus = this.game.add.audio('bonus', true);
 
-
+            
+            //FLAG
+            this.flags = game.add.group();
+            this.flags.enableBody = true;
+            this.flags.createMultiple(10, 'flag');
 
             this.pp = this.game.add.tileSprite(0, h_window - 130, w_window, 130, 'pp');
 
-            $("#volumeButton").click(function(){
-                console.log(Phaser.SoundManager);
-                Phaser.SoundManager.volume=0;
-                
-            })
-
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -297,51 +379,39 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         update: function () {
-            //            console.log(parseInt(this.music.durationMS));
 
-            //            console.log(this.music.currentTime);
-            if ((parseInt(this.music.durationMS) == this.music.currentTime) && this.music.durationMS != 0) {
-                console.log("goMusicBonus");
-            }
-            //            var delay = Timer(game, autoDestroy)
-            //             console.log(delay);
-            //            for (var i = 0; i <= delay; i = i + 0.000000000000001) {
-            //                this.musicBonus.play();
-            //
-            //            }
             game.physics.arcade.collide(this.dude, platforms);
 
             if (localStorage.getItem("highscore")) {
                 highscore = localStorage.getItem("highscore");
             }
 
-            // var rdmTime = Math.max(Math.random()*1000 + easy, 1000);
-            // console.log(rdmTime);
-            // this.timer = game.time.events.loop(rdmTime, this.addRowOfrocks, this);
-
-
 
             var rand = game.rnd.integerInRange(1, 3);
-            //            console.log(rand);
             var dif = Math.random();
+            var dif_b = Math.random();
+            var dif_c = Math.random();
             var dif2 = Math.random() * 10;
-            easy = 0.989;
-            //var dif2 = Math.random(0,2);
-            //console.log(dif2);
+            easy = 0.991;
 
 
             if (dif > easy) {
                 this.addRowOfrocks();
-                //console.log('condition : ' + dif + ' > ' + easy)
-
                 if (rand == 1) {
                     this.rocks.createMultiple(1, 'rock2');
                 } else if (rand == 2) {
                     this.rocks.createMultiple(1, 'rock');
                 } else {
                     this.rocks.createMultiple(1, 'rock3');
-
                 }
+            }
+
+            if (dif_b > easy+0.008) {
+                this.addRowOfThrees();
+            }
+
+            if (dif_c > easy+0.008) {
+                this.addRowOfFlags();
             }
 
             if (total > 100) {
@@ -349,6 +419,19 @@ start_button.onclick = function () {
                     this.addRowOfBonuss();
                 };
             }
+
+
+            // // if (total > 100) {
+            //     if (total<100.00000000001 && total>99.99999999999) {
+            //         // if (total%100==0) {
+            //         //     console.log('total%100');
+            //         // };
+                    
+            //         this.addRowOfFlags();
+            //         this.stop;
+            //     };
+            // // };
+            
 
             if (this.speed < this.maxSpeed)
                 this.speed += 0.0015;
@@ -363,6 +446,12 @@ start_button.onclick = function () {
             };
             for (var i in this.bonuss.children) {
                 this.bonuss.children[i].body.x -= this.speed;
+            };
+            for (var i in this.flags.children) {
+                this.flags.children[i].body.x -= this.speed;
+            };
+            for (var i in this.threes.children) {
+                this.threes.children[i].body.x -= this.speed;
             };
 
 
@@ -436,6 +525,8 @@ start_button.onclick = function () {
 
 
             this.collidesBonus(this.bonuss, this.dude);
+            this.collidesThrees(this.threes, this.dude);
+            this.collidesFires(this.flags, this.dude);
 
             // SCORE
             total += 0.1;
@@ -444,6 +535,36 @@ start_button.onclick = function () {
 
 
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         ///////////////////////////////////////////////
         //
         //          ADD OBSTACLES + BONUS
@@ -471,6 +592,29 @@ start_button.onclick = function () {
         addRowOfrocks: function () {
             this.addOnerock(w_window, h_window - 50 - 47);
         },
+
+        addOneThree: function (x, y) {
+            // Get the first dead rock of our group
+            var three = this.threes.getFirstDead();
+
+            // Set the new position of the rock
+            three.reset(x, y);
+
+            // Add velocity to the rock to make it move left
+            //rock.body.velocity.x = 0;
+            //rock.body.velocity.y = 0;
+
+            // Kill the rock when it's no longer visible
+            three.checkWorldBounds = true;
+            three.outOfBoundsKill = true;
+            three.body.immovable = true;
+
+            //this.rocks.push(rock);
+        },
+        addRowOfThrees: function () {
+            this.addOneThree(w_window, h_window - 88 - 47);
+        },
+
         addOneBonus: function (x, y) {
             // Get the first dead rock of our group
             this.cube = this.bonuss.getFirstDead();
@@ -493,6 +637,64 @@ start_button.onclick = function () {
             this.addOneBonus(w_window, h_window - 157 - 90);
         },
 
+        addOneFlag: function (x, y) {
+            // Get the first dead rock of our group
+            this.flag = this.flags.getFirstDead();
+
+            // Set the new position of the rock
+            this.flag.reset(x, y);
+
+            // Add velocity to the rock to make it move left
+            //rock.body.velocity.x = 0;
+            //rock.body.velocity.y = 0;
+
+            // Kill the rock when it's no longer visible
+            this.flag.checkWorldBounds = true;
+            this.flag.outOfBoundsKill = true;
+            this.flag.body.immovable = true;
+            this.flag.body.setSize(97, 30, 0, 100);
+            this.flag.animations.add('anim', [0, 1, 2], 14, true);
+            this.flag.play('anim');
+
+            //this.rocks.push(rock);
+        },
+        addRowOfFlags: function () {
+            this.addOneFlag(w_window, h_window - 47 - 130);
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         ///////////////////////////////////////////////
         //
@@ -513,6 +715,32 @@ start_button.onclick = function () {
             this.sound.volume = soundVolume;
         },
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         ///////////////////////////////////////////////
         //
         //          COLLIDE FONCTION
@@ -520,6 +748,18 @@ start_button.onclick = function () {
         ///////////////////////////////////////////////
 
         collides: function (a, b) {
+            var collision = game.physics.arcade.collide(a, b);
+            if (collision) {
+                this.restartGame();
+            }
+        },
+        collidesThrees: function (a, b) {
+            var collision = game.physics.arcade.collide(a, b);
+            if (collision) {
+                this.restartGame();
+            }
+        },
+        collidesFires: function (a, b) {
             var collision = game.physics.arcade.collide(a, b);
             if (collision) {
                 this.restartGame();
