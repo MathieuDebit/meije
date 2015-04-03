@@ -487,10 +487,10 @@ start_button.onclick = function () {
                 this.dude.alpha = 0.5;
 
             } else {
-                //this.back.tint = 0x70cfff;
-                // this.collides(this.rocks, this.dude);
-                // this.collidesThrees(this.threes, this.dude);
-                // this.collidesFires(this.flags, this.dude);
+                this.back.tint = 0x70cfff;
+                this.collides(this.rocks, this.dude);
+                this.collidesThrees(this.threes, this.dude);
+                this.collidesFires(this.flags, this.dude);
                 this.dude.alpha = 1;
                 this.music.volume = 1;
                 this.musicBonus.volume = 0;
