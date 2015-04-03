@@ -27,36 +27,13 @@ start_button.onclick = function () {
             $(this).data("paused", !$(this).data("paused"));
             if ($(this).data("paused")) {
                 game.paused = true;
-                $(this).css('background-position', '154px');
+                $(this).css('background-position', '94px');
             } else {
                 game.paused = false;
                 $(this).css('background-position', 'right');
             }
         })
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -119,21 +96,6 @@ start_button.onclick = function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     var mainState = {
 
         ///////////////////////////////////////////////
@@ -156,19 +118,21 @@ start_button.onclick = function () {
             this.game.load.image('rock2', 'assets/hex_obs_2.png');
             this.game.load.image('rock3', 'assets/hex_obs_3.png');
             this.game.load.image('three', 'assets/hex_obs_4.png');
-            this.game.load.image('cube', 'assets/hex_bonus.png');
-            this.game.load.spritesheet('cube', 'assets/hex_bonus.png',23,20);
+            this.game.load.spritesheet('cube', 'assets/hex_bonus.png', 46, 40);
+            //            this.game.load.spritesheet('cube', 'assets/hex_bonus.png',23,20);
 
             // BACKGROUND
             this.game.load.image('vide', 'assets/empty.png');
             this.game.load.image('sky', 'assets/hex_sky.png');
+            this.game.load.image('sky_cloud', 'assets/hex_sky_cloud.png');
+
             this.game.load.image('m_1', 'assets/hex_m_1.png');
             this.game.load.image('m_2', 'assets/hex_m_2.png');
             this.game.load.image('m_3', 'assets/hex_m_3.png');
             this.game.load.image('pp', 'assets/hex_premierPlan.png');
 
             // BUTTONS
-            this.game.load.spritesheet('buttons', 'assets/hex_buttons.png',77, 50 );
+            this.game.load.spritesheet('buttons', 'assets/hex_buttons.png', 47, 30);
 
             //SOUND
             this.game.load.audio('die', ['assets/trumpette.mp3', 'assets/trumpette.ogg']);
@@ -178,28 +142,16 @@ start_button.onclick = function () {
 
             this.game.load.image('sound_button', 'Mouton_du_tonerre/mouton32.png')
 
-            this.game.load.spritesheet('flag', 'assets/fire.png', 104, 130);
+            this.game.load.spritesheet('flag', 'assets/fire.png', 97, 130);
 
 
             this.game.load.image('overlay', 'assets/overlay.png');
 
+            this.game.load.image('bar', 'assets/hex_bar.png');
+            this.game.load.image('bar_bottom', 'assets/hex_bar_bottom.png');
+
+
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -217,7 +169,7 @@ start_button.onclick = function () {
 
         create: function () {
 
-            this.game.add.plugin(Phaser.Plugin.Debug);
+            //            this.game.add.plugin(Phaser.Plugin.Debug);
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
             this.speed = 6.3;
@@ -233,10 +185,15 @@ start_button.onclick = function () {
             this.sky.width = w_window;
             this.sky.smoothed = false;
             this.m_3 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_3');
+            this.sky_cloud = this.game.add.tileSprite(0, 250, 1252, 367, 'sky_cloud');
+
             this.m_2 = this.game.add.tileSprite(0, h_window - 175 - 47, w_window, 376, 'm_2');
             this.m_1 = this.game.add.tileSprite(0, h_window - 217 - 47, w_window, 376, 'm_1');
             this.vide = this.game.add.tileSprite(w_window, h_window - 139, 'vide');
             this.ground = this.game.add.tileSprite(0, h_window - 47, w_window, 91, 'ground');
+            this.bar = game.add.tileSprite(0, 0, w_window, 50, 'bar');
+            this.bar_bottom = game.add.tileSprite(0, 50, w_window, 5, 'bar_bottom');
+
 
             //PLATEFORMS
             platforms = game.add.group();
@@ -260,13 +217,13 @@ start_button.onclick = function () {
             this.bonuss.createMultiple(10, 'cube');
 
             // BUTTONS VOLUME
-            this.soundButton = this.game.add.sprite(w_window-200, 30, 'buttons');
+            this.soundButton = this.game.add.sprite(w_window - 140, 10, 'buttons');
             this.soundButton.animations.add('volumeOn', [1]);
             this.soundButton.animations.add('volumeOff', [0]);
             this.soundButton.inputEnabled = true;
-            if (this.sound.volume==0){
+            if (this.sound.volume == 0) {
                 this.soundButton.play('volumeOff');
-            } else{
+            } else {
                 this.soundButton.play('volumeOn');
             }
 
@@ -275,13 +232,13 @@ start_button.onclick = function () {
             soundVolume = this.sound.volume;
 
             this.soundButton.events.onInputDown.add(soundButton, this);
-            function soundButton(){
-                if (this.sound.volume==0){
-                    soundVolume=this.sound.volume=1;
+
+            function soundButton() {
+                if (this.sound.volume == 0) {
+                    soundVolume = this.sound.volume = 1;
                     this.soundButton.play('volumeOn');
-                } 
-                else{
-                    soundVolume=this.sound.volume=0;
+                } else {
+                    soundVolume = this.sound.volume = 0;
                     this.soundButton.play('volumeOff');
                 }
             }
@@ -289,15 +246,15 @@ start_button.onclick = function () {
             document.onkeydown = function (event) {
                 var key_press = String.fromCharCode(event.keyCode);
                 var key_code = event.keyCode;
-            
+
                 if (key_code == 80) {
                     if (game.paused) {
-                        game.paused=false;
+                        game.paused = false;
                     } else {
-                        game.paused=true;
+                        game.paused = true;
                     };
                 }
-            
+
             }
 
             //PLAYER
@@ -307,7 +264,7 @@ start_button.onclick = function () {
             this.dude.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 16, true);
             this.dude.animations.add('space', [10, 11], 10, true);
 
-            
+
 
             //KEYS
             this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -334,8 +291,8 @@ start_button.onclick = function () {
             this.musicBonus.play();
 
             this.bruitBonus = this.game.add.audio('bonus', true);
+            this.synchMusic = false;
 
-            
             //FLAG
             this.flags = game.add.group();
             this.flags.enableBody = true;
@@ -343,26 +300,23 @@ start_button.onclick = function () {
 
             this.pp = this.game.add.tileSprite(0, h_window - 130, w_window, 130, 'pp');
 
+            this.text_score = game.add.text(20, 13, "Score", {
+                font: "20px Helvetica",
+                fill: "#ffffff",
+                align: "left"
+            });
+            this.text_highscore = game.add.text(150, 13, "Highscore", {
+                font: "20px Helvetica",
+                fill: "#ffffff",
+                align: "left"
+            });
+            this.text_bonus = game.add.text(w_window/2, 13, "", {
+                font: "20px Helvetica",
+                fill: "#ffffff",
+                align: "center"
+            });
+
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -381,11 +335,20 @@ start_button.onclick = function () {
         update: function () {
 
             game.physics.arcade.collide(this.dude, platforms);
+            if ((!this.synchMusic) && (this.music.currentTime == 0) && (total > 5)) {
+                this.musicBonus.play();
+                console.log(this.music.currentTime);
+                console.log(this.musicBonus.currentTime);
+                this.synchMusic = true;
+            }
 
             if (localStorage.getItem("highscore")) {
                 highscore = localStorage.getItem("highscore");
             }
 
+
+            this.bar.tilePosition.x += 1;
+            this.bar.tilePosition.y += 1;
 
             var rand = game.rnd.integerInRange(1, 3);
             var dif = Math.random();
@@ -406,11 +369,11 @@ start_button.onclick = function () {
                 }
             }
 
-            if (dif_b > easy+0.008) {
+            if (dif_b > easy + 0.008) {
                 this.addRowOfThrees();
             }
 
-            if (dif_c > easy+0.008) {
+            if (dif_c > easy + 0.008) {
                 this.addRowOfFlags();
             }
 
@@ -426,17 +389,19 @@ start_button.onclick = function () {
             //         // if (total%100==0) {
             //         //     console.log('total%100');
             //         // };
-                    
+
             //         this.addRowOfFlags();
             //         this.stop;
             //     };
             // // };
-            
+
 
             if (this.speed < this.maxSpeed)
                 this.speed += 0.0015;
 
             this.ground.tilePosition.x -= this.speed;
+            this.sky_cloud.tilePosition.x -= 0.23 * (this.speed / 10);
+
             this.m_3.tilePosition.x -= 0.2 * (this.speed / 10);
             this.m_2.tilePosition.x -= 0.3 * (this.speed / 10);
             this.m_1.tilePosition.x -= 0.4 * (this.speed / 10);
@@ -456,12 +421,11 @@ start_button.onclick = function () {
 
 
             if (this.volumeKey.isDown) {
-                if (this.sound.volume==0){
-                    soundVolume=this.sound.volume=1;
+                if (this.sound.volume == 0) {
+                    soundVolume = this.sound.volume = 1;
                     console.log('soundVolume : ' + soundVolume);
-                } 
-                else{
-                    soundVolume=this.sound.volume=0;
+                } else {
+                    soundVolume = this.sound.volume = 0;
                 }
                 this.stop;
             };
@@ -480,9 +444,10 @@ start_button.onclick = function () {
             }
 
             game.input.onDown.add(zoneClick, this);
-            function zoneClick(pointer){
-                if (pointer.y > 100){
-                        if (this.compteNbSaut < 2) {
+
+            function zoneClick(pointer) {
+                if (pointer.y > 100) {
+                    if (this.compteNbSaut < 2) {
                         this.compteNbSaut = this.compteNbSaut + 1;
                         game.physics.arcade.enable(this.dude);
                         this.dude.body.gravity.y = 2000;
@@ -504,19 +469,24 @@ start_button.onclick = function () {
                 this.restartGame();
             }
 
-
             if (bonus > 0) {
 
                 //this.back_bonus.alpha = 1;
                 //this.back.tint = 0xb5ff70;
                 bonus -= 0.02;
-                game.debug.text('INVISIBLE MODE : ' + parseInt(bonus), 32, 62 * 1.5);
+
+                this.text_bonus.setText("MODE INVICIBLE : " + parseInt(bonus));
+
+                //                game.debug.text('INVISIBLE MODE : ' + parseInt(bonus), 32, 62 * 1.5);
 
                 this.dude.alpha = 0.5;
 
             } else {
                 //this.back.tint = 0x70cfff;
                 this.collides(this.rocks, this.dude);
+                this.collidesBonus(this.bonuss, this.dude);
+                this.collidesThrees(this.threes, this.dude);
+                this.collidesFires(this.flags, this.dude);
                 this.dude.alpha = 1;
                 this.music.volume = 1;
                 this.musicBonus.volume = 0;
@@ -524,38 +494,15 @@ start_button.onclick = function () {
 
 
 
-            this.collidesBonus(this.bonuss, this.dude);
-            this.collidesThrees(this.threes, this.dude);
-            this.collidesFires(this.flags, this.dude);
 
             // SCORE
             total += 0.1;
-            game.debug.text('Score : ' + parseInt(total), 32, 32);
-            game.debug.text('High Score : ' + parseInt(highscore), 32, 32 * 1.5);
+            this.text_score.setText("Score : " + parseInt(total));
+            this.text_highscore.setText("Highscore : " + parseInt(highscore));
+
 
 
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -670,32 +617,6 @@ start_button.onclick = function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ///////////////////////////////////////////////
         //
         //          RESTART FONCTION
@@ -714,24 +635,6 @@ start_button.onclick = function () {
             this.musicBonus.stop();
             this.sound.volume = soundVolume;
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
