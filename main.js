@@ -239,19 +239,25 @@ start_button.onclick = function () {
             this.soundButton.animations.add('volumeOn', [1]);
             this.soundButton.animations.add('volumeOff', [0]);
             this.soundButton.inputEnabled = true;
-
-
+            
+             this.sound.volume = 1
             this.sound.volume = localStorage.getItem("soundVolume");
+            
+        
+            
             this.soundButton.events.onInputDown.add(soundButton, this);
 
             function soundButton() {
-                if (this.sound.volume == 0) {
+                if (this.sound.volume == 1) {
+                    
+                     this.sound.volume = 0;
+                    this.soundButton.play('volumeOff');
+                    localStorage.setItem("soundVolume", this.sound.volume);
+                    
+                } else {
+                    
                     this.sound.volume = 1;
                     this.soundButton.play('volumeOn');
-                    localStorage.setItem("soundVolume", this.sound.volume);
-                } else {
-                    this.sound.volume = 0;
-                    this.soundButton.play('volumeOff');
                     localStorage.setItem("soundVolume", this.sound.volume);
                 }
             }
@@ -433,13 +439,19 @@ start_button.onclick = function () {
                 this.threes.children[i].body.x -= this.speed;
             };
 
-
+            
             if (this.volumeKey.isDown) {
-                if (this.sound.volume == 0) {
-                    soundVolume = this.sound.volume = 1;
-                    console.log('soundVolume : ' + soundVolume);
+               if (this.sound.volume == 1) {
+                    
+                     this.sound.volume = 0;
+                    this.soundButton.play('volumeOff');
+                    localStorage.setItem("soundVolume", this.sound.volume);
+                    
                 } else {
-                    soundVolume = this.sound.volume = 0;
+                    
+                    this.sound.volume = 1;
+                    this.soundButton.play('volumeOn');
+                    localStorage.setItem("soundVolume", this.sound.volume);
                 }
                 this.stop;
             };
@@ -656,7 +668,6 @@ start_button.onclick = function () {
             localStorage.setItem("highscore", highscore);
             this.music.stop();
             this.musicBonus.stop();
-            this.sound.volume = soundVolume;
         },
 
 
