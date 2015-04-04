@@ -497,12 +497,15 @@ start_button.onclick = function () {
                 this.moon.alpha = 1;
                 this.sky_night.alpha = 1;
             } else {
+
                 this.game.stage.backgroundColor = "b9c5be";
                 this.text_bonus.visible = false;
                                 this.collides(this.rocks, this.dude);
                                 this.collidesThrees(this.threes, this.dude);
                                 this.collidesFires(this.flags, this.dude);
+
                 this.dude.alpha = 1;
+                this.sky_night.alpha=0;
                 this.music.volume = 1;
                 this.musicBonus.volume = 0;
                 this.moon.alpha = 0;
