@@ -1,0 +1,110 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+#overlay {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+    text-align: center;
+    background-image: url(assets/hex_sky.png);
+    background-size: cover;
+}
+
+#center {
+    height: 200px;
+    width: 260px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -130px;
+    margin-top: -100px;
+}
+
+#button-start {
+    width: 196px;
+    height: 50px;
+    margin: 18px auto;
+    background: #e3daa5;
+    border: 0;
+    padding-left: 16px;
+    border-bottom: 4px solid #cdc490;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bolder;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    font-size: 22px;
+    letter-spacing: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+#button-start:hover,
+#button-start:focus {
+    border-bottom: 0px solid #cdc490;
+    margin-top: 22px;
+    height: 46px;
+}
+
+#pauseButton {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    width: 47px;
+    height: 30px;
+    padding: 0;
+    background-color: transparent;
+    background-image: url(assets/hex_buttons.png);
+    background-position: right;
+    border: 0;
+    cursor: pointer;
+}
+
+#tuto {
+    position: absolute;
+    bottom: 120px;
+    width: 100%;
+    margin: auto;
+}
+
+#tuto img {
+    height: 30px;
+    margin: 0 6px;
+}
+
+.credit {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: right;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+li {
+    display: inline-block;
+    list-style: none;
+}
+
+.credit a {
+    color: #303454;
+    border-bottom: 1px dashed;
+    text-decoration: none;
+}
+
+.credit a:hover {
+    border-bottom: none;
+}
