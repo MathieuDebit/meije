@@ -281,8 +281,10 @@ start_button.onclick = function () {
                 if (key_code == 80) {
                     if (game.paused) {
                         game.paused = false;
+                        $("#pauseButton").css('background-position', 'right');
                     } else {
                         game.paused = true;
+                        $("#pauseButton").css('background-position', '94px');
                     };
                 }
 
