@@ -3,9 +3,7 @@ A simple Javascript runner game for a project at @mmibdx, built with Phaser Fram
 
 Play it online here : http://meije-ga.me/
 
-Development : @vgalmand @MathieuDebit
-Design : @vgalmand @YassinLamtalsi
-Game design : @RJougla @gg_gix @MarionTajan31
+Development : @vgalmand @MathieuDebit | Design : @vgalmand @YassinLamtalsi | Game design : @RJougla @gg_gix @MarionTajan31
 
 With the help of @arnaudlevy @Alex_Benoit_ Florent Michel @Lucas_Bigot 
-Original SOundtrack : Adrien Gesta
+Original Soundtrack : Adrien Gesta
