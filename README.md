@@ -1,5 +1,5 @@
 # meije
-A simple Javascript runner game for a project at @mmibdx., built with Phaser Framework, and designed with Hexels.
+A simple Javascript runner game for a project at @mmibdx, built with Phaser Framework and designed with Hexels.
 
 Play it online here : http://meije-ga.me/
 
